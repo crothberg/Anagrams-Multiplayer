@@ -30,6 +30,7 @@ def user_disc():
             active_games.remove(game)
 
 def join_game(command):
+    global active_games
     game_name = command.get('game_name')
     username = ''
     sid = request.sid
