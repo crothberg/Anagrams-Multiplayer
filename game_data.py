@@ -8,15 +8,18 @@ class game_room():
         self.active_users = {host}
         self.host = host
     
-    def add_user(user):
+    def add_user(self, user):
         self.active_users.add(user)
 
-    def has_user(sid):
+    def has_user(self, sid):
         return len({user for user in self.active_users if user.sid == sid}) > 0
 
-    def remove_user(sid):
+    def remove_user(self, sid):
         self.active_users = {user for user in self.active_users if user.sid != sid}
     
-    def num_users():
+    def num_users(self):
         return len(self.active_users)
+
+    def generate_game_state(self):
+        return {'game_state' : {'num_users' : self.num_users()}}
 
