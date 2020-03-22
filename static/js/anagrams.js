@@ -6,8 +6,8 @@ window.onload = function() {
         socket.emit('json', {command: 'join_game', game_name: 'my_game'});
     });
 
-    socket.on('json', function() {
-        alert('received callback!');
+    socket.on('json', function(data) {
+        console.log(data);
     });
 
     $("#flip-action").on("keyup", function(event) {
