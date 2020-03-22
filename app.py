@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO
 
 app = Flask(__name__)
@@ -7,6 +7,10 @@ socketio = SocketIO(app)
 @app.route('/', methods=['GET'])
 def hello():
     return render_template('index.html')
+
+@app.route('/game', methods=['GET'])
+def visit_game():
+    return 'Currently in game: ' + request.args.get('game_name', None)
 
 @socketio.on('my event')
 def handle_my_custom_event(json):
