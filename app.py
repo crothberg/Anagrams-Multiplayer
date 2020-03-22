@@ -8,6 +8,10 @@ socketio = SocketIO(app)
 def hello():
     return render_template('index.html')
 
+@app.route('/game', methods=['GET'])
+def visit_game():
+    return 'Currently in game: ' + request.args.get('game_name')
+
 @socketio.on('my event')
 def handle_my_custom_event(json):
     print('received json: ' + str(json))
