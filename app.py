@@ -14,6 +14,7 @@ db = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 def setup_db():
     cur = db.cursor()
+    cur.execute('DROP TABLE USERS')
     cur.execute('CREATE TABLE USERS (                   \
                     SID TEXT PRIMARY KEY    NOT NULL,   \
                     NAME    TEXT            NOT NULL,   \
