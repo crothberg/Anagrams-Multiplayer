@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO
 import game_data
-import ZODB, ZODB.FileStorage, transaction
+import psycopg2
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -53,19 +53,18 @@ def join_game(command):
     game_name = command.get('game_name')
     username = ''
     sid = request.sid
-    user = game_data.user(username, sid)
-    game_obj = db.active_games.get(game_name)
+    cur = db.cursor()
+    game_obj = cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
     if game_obj is None:
         ##create the game:
-        game_obj = game_data.game_room(user)
-        db.active_games[game_name] = game_obj
+        cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)' (game_name,)
 
-    game_obj.add_user(user)
-    transaction.commit()
+    cur.execute('INSERT INTO USERS (SID, NAME, GAME) VALUES (%d, %s, %s)', (sid, username, gamename))
 
-    new_state = game_obj.generate_game_state()
-    for user in game_obj.active_users:
-        socketio.emit('json', new_state, room = user.sid)
+    new_state = generate_game_state(cur, game_name)
+    cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,)
+    for sid_wrapper in cur.fetchall():
+        socketio.emit('json', new_state, room = sid_wrapper[0])
 
 @socketio.on('flip')
 def flip_tile(args):
