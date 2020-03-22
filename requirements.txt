@@ -3,4 +3,4 @@ flask
 flask-socketio
 gevent
 gevent-websocket
-ZODB
+psycopg2-binary
