@@ -6,8 +6,8 @@ import ZODB, ZODB.FileStorage, transaction
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
-db = ZODB.DB(db_storage)
+#db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
+db = ZODB.DB(None)
 try:
     active_games = db.active_games
 except AttributeError:
