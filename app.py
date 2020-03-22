@@ -39,6 +39,10 @@ def join_game(command):
         ##create the game:
         game_obj = game_data.game_room(user)
 
+    new_state = game_obj.generate_game_state()
+    for user in game_obj.active_users:
+        socketio.emit('json', new_state, room = user.sid)
+
 if __name__ == '__main__':
     socketio.run(app)
     app.run(debug=True)
