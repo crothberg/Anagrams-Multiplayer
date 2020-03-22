@@ -7,12 +7,20 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 
 #db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
-db = ZODB.DB(None)
-try:
-    active_games = db.active_games
-except AttributeError:
-    db.active_games = {}
-    transaction.commit()
+
+DATABASE_URL = os.environ['DATABASE_URL']
+db = psycopg2.connect(DATABASE_URL, sslmode='require')
+
+def setup_db():
+    cur = db.cursor()
+    cur.execute('CREATE TABLE USERS (                   \
+                    SID INT PRIMARY KEY     NOT NULL,   \
+                    NAME    TEXT            NOT NULL,   \
+                    GAME    TEXT                    )')
+    cur.execute('CREATE TABLE GAMES (                   \
+                    NAME TEXT)')
+
+setup_db(db)
 
 @app.route('/')
 def hello():
@@ -30,15 +38,16 @@ def json_dispacher(json):
 @socketio.on('disconnect')
 def user_disc():
     sid = request.sid
-    #TODO: This is slow fix later with user -> game map
-    for game_name in db.active_games:
-        game = db.active_games[game_name]
-        game.remove_user(sid)
-        if game.num_users == 0:
-            del db.active_games[game_name]
-
-    transaction.commit()
-
+    cur = db.cursor()
+    #remove users
+    cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
+    #remove newly empty games
+    cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
+                    SELECT NAME FROM USERS)'
+def generate_game_state(cur, game_name):
+    cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,))
+    num_users = len(cur.fetchall())
+    return {'game_state' : {'num_users' : num_users}}
 
 def join_game(command):
     game_name = command.get('game_name')
