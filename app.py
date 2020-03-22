@@ -35,7 +35,8 @@ def user_disc():
         if game.num_users == 0:
             del db.active_games[game_name]
 
- transaction.commit()
+    transaction.commit()
+
 
 def join_game(command):
     game_name = command.get('game_name')
