@@ -36,8 +36,8 @@ window.onload = function() {
         return false;
     });
 
-    $("#contest").click(function() {
-        socket.emit('contest');
+    $("#undo").click(function() {
+        socket.emit('undo');
     });
 
 }

@@ -7,19 +7,47 @@
 </head>
 
 <body>
-    <h1 id="game-title">Anagrams Game: {{ game_name }}</h1>
-    <p id="status">To flip a tile, press enter. To steal a word, type it.</p>
+    <div id="header-bar">
+        <h1 id="game-title">Anagrams Game: {{ game_name }}</h1>
+        <p id="status">To flip a tile, press enter. To steal a word, type it.</p>
+    </div>
+    <div id="main">
+        <div id="board">
+            <div id="action-bar">
+                <div id="flip-action-div">
+                    <form id="flip-action">
+                        <input type="text" id="flip-action-text" name="flip-action-text" autofocus>
+                    </form>
+                </div>
+                <div id="middle">2</div>
+                <div id="undo-button-div">3</div>
+            </div>
+            <div id="player-space">
+                p1, p2, p3, p4, p5
+            </div>
+        </div>
+        <div id="chatbar">
+            <div id="chat-title">CHATS</div>
+            <div id="chats">chats</div>
+        </div>
+    </div>
+
+    <!-- 
     
-    <div id=board>
-        <form id="flip-action">
-            Enter a word: <input type="text" id="flip-action-text" name="flip-action-text" autofocus>
-        </form>
-        <br>
-        <button id="contest">
-            Contest
-        </button>
-        <div id="middle">
-            <span class="tile">A</span>
+    <div id="board">
+        <div id="action-bar">
+            <div id="flip-action-div">
+                <form id="flip-action">
+                    <input type="text" id="flip-action-text" name="flip-action-text" autofocus>
+                </form>
+            </div>
+            <div id="middle">
+                MIDDLE
+                <span class="tile">A</span>
+            </div>
+            <button id="undo">
+                Undo
+            </button>
         </div>
         <div class="player-words" id=""></div>
     </div>
@@ -27,7 +55,7 @@
     <div id="chatbar">
         <h2 id="chat-title">Chat</h2>
         <div id="chats"></div>
-    </div>
+    </div> -->
     
 
 </body>
