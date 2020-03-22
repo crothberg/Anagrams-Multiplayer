@@ -10,7 +10,7 @@ socketio = SocketIO(app)
 #db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
 
 DATABASE_URL = os.environ['DATABASE_URL']
-#db = psycopg2.connect(DATABASE_URL, sslmode='require')
+db = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 def setup_db():
     cur = db.cursor()
@@ -25,7 +25,6 @@ setup_db(db)
 
 @app.route('/')
 def hello():
-    return DATABASE_URL
     return render_template('index.html')
 
 @app.route('/<game_name>')
