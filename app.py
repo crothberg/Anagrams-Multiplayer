@@ -60,7 +60,7 @@ def join_game(command):
         ##create the game:
         cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)', (game_name,))
 
-    cur.execute('INSERT INTO USERS (SID, NAME, GAME) VALUES (%d, %s, %s)', (sid, username, game_name))
+    cur.execute('INSERT INTO USERS (SID, NAME, GAME) VALUES (%s, %s, %s)', (str(sid), username, game_name))
 
     new_state = generate_game_state(cur, game_name)
     cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,))
