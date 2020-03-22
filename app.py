@@ -88,4 +88,4 @@ def steal_word(args):
 
 if __name__ == '__main__':
     socketio.run(app)
-    app.run(debug=True)
+    #app.run(debug=True)
