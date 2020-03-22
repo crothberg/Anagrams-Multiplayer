@@ -33,7 +33,8 @@ def user_disc():
         game.remove_user(sid)
         if game.num_users == 0:
             del db.active_games[game_name]
-    transaction.commit()
+
+ transaction.commit()
 
 def join_game(command):
     game_name = command.get('game_name')
@@ -44,8 +45,10 @@ def join_game(command):
     if game_obj is None:
         ##create the game:
         game_obj = game_data.game_room(user)
-        db.active_games.[game_name] = game_obj
-        transaction.commit()
+        db.active_games[game_name] = game_obj
+
+    game_obj.add_user(user)
+    transaction.commit()
 
     new_state = game_obj.generate_game_state()
     for user in game_obj.active_users:
