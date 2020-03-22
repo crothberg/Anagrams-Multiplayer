@@ -14,13 +14,12 @@ except AttributeError:
     db.active_games = {}
     transaction.commit()
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def hello():
     return render_template('index.html')
 
-@app.route('/game', methods=['GET'])
-def visit_game():
-    game_name = request.args.get('game_name')
+@app.route('/<game_name>')
+def visit_game(game_name):
     return render_template('game.html', game_name=game_name)
 
 @socketio.on('json')
@@ -58,6 +57,25 @@ def join_game(command):
     new_state = game_obj.generate_game_state()
     for user in game_obj.active_users:
         socketio.emit('json', new_state, room = user.sid)
+
+@socketio.on('flip')
+def flip_tile(args):
+    user = args.get('user')
+    flipped_tile, middle = flip_tile()
+    socketio.emit(
+        'tile_flipped',
+        {'user': user, 'tile': flipped_tile, 'middle': middle}
+    )
+
+@socketio.on('steal')
+def flip_tile(args):
+    user = args.get('user')
+    word = args.get('word')
+    flipped_tile, updated_boards = flip_tile()
+    socketio.emit(
+        'word_stolen',
+        {'user': user, 'tile': flipped_tile, 'updated_boards': updated_boards}
+    )
 
 if __name__ == '__main__':
     socketio.run(app)

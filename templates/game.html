@@ -1,14 +1,33 @@
-<script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
-<script src="{{ url_for('static', filename='js/anagrams.js') }}"></script>
+<head>
+    <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/anagrams.js') }}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
 
 <body>
     <h1 id="game-title">Anagrams Game: {{ game_name }}</h1>
-    <form id="flip-action">
-        <input type="text" id="flip-action-text" name="flip-action-text" autofocus>
-    </form>
-    <br>
-    <button id="contest">
-        Contest
-    </button>
+    <p id="status">To flip a tile, press enter. To steal a word, type it.</p>
+    
+    <div id=board>
+        <form id="flip-action">
+            Enter a word: <input type="text" id="flip-action-text" name="flip-action-text" autofocus>
+        </form>
+        <br>
+        <button id="contest">
+            Contest
+        </button>
+        <div id="middle">
+            <span class="tile">A</span>
+        </div>
+        <div class="player-words" id=""></div>
+    </div>
+
+    <div id="chatbar">
+        <h2 id="chat-title">Chat</h2>
+        <div id="chats"></div>
+    </div>
+    
+
 </body>
