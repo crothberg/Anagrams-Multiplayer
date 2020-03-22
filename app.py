@@ -1,26 +1,18 @@
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO
 import game_data
-import psycopg2
+import ZODB, ZODB.FileStorage, transaction
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
 #db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
-
-DATABASE_URL = os.environ['DATABASE_URL']
-db = psycopg2.connect(DATABASE_URL, sslmode='require')
-
-def setup_db():
-    cur = db.cursor()
-    cur.execute('CREATE TABLE USERS (
-                    SID INT PRIMARY KEY     NOT NULL,
-                    NAME    TEXT            NOT NULL,
-                    GAME    TEXT                    )')
-    cur.execute('CREATE TABLE GAMES (
-                    NAME TEXT)')
-
-setup_db(db)
+db = ZODB.DB(None)
+try:
+    active_games = db.active_games
+except AttributeError:
+    db.active_games = {}
+    transaction.commit()
 
 @app.route('/')
 def hello():
@@ -38,33 +30,33 @@ def json_dispacher(json):
 @socketio.on('disconnect')
 def user_disc():
     sid = request.sid
-    cur = db.cursor()
-    #remove users
-    cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
-    #remove newly empty games
-    cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (
-                    SELECT NAME FROM USERS)'
-def generate_game_state(cur, game_name):
-    cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,))
-    num_users = len(cur.fetchall())
-    return {'game_state' : {'num_users' : num_users}}
+    #TODO: This is slow fix later with user -> game map
+    for game_name in db.active_games:
+        game = db.active_games[game_name]
+        game.remove_user(sid)
+        if game.num_users == 0:
+            del db.active_games[game_name]
+
+    transaction.commit()
+
 
 def join_game(command):
     game_name = command.get('game_name')
     username = ''
     sid = request.sid
-    cur = db.cursor()
-    game_obj = cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
+    user = game_data.user(username, sid)
+    game_obj = db.active_games.get(game_name)
     if game_obj is None:
         ##create the game:
-        cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)' (game_name,)
+        game_obj = game_data.game_room(user)
+        db.active_games[game_name] = game_obj
 
-    cur.execute('INSERT INTO USERS (SID, NAME, GAME) VALUES (%d, %s, %s)', (sid, username, gamename))
+    game_obj.add_user(user)
+    transaction.commit()
 
-    new_state = generate_game_state(cur, game_name)
-    cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,)
-    for sid_wrapper in cur.fetchall():
-        socketio.emit('json', new_state, room = sid_wrapper[0])
+    new_state = game_obj.generate_game_state()
+    for user in game_obj.active_users:
+        socketio.emit('json', new_state, room = user.sid)
 
 @socketio.on('flip')
 def flip_tile(args):
