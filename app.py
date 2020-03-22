@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from flask_socketio import SocketIO
 import game_data
 import psycopg2
+import os
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -43,7 +44,7 @@ def user_disc():
     cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
     #remove newly empty games
     cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
-                    SELECT NAME FROM USERS)'
+                    SELECT NAME FROM USERS)')
 def generate_game_state(cur, game_name):
     cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,))
     num_users = len(cur.fetchall())
@@ -57,12 +58,12 @@ def join_game(command):
     game_obj = cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
     if game_obj is None:
         ##create the game:
-        cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)' (game_name,)
+        cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)', (game_name,))
 
     cur.execute('INSERT INTO USERS (SID, NAME, GAME) VALUES (%d, %s, %s)', (sid, username, gamename))
 
     new_state = generate_game_state(cur, game_name)
-    cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,)
+    cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,))
     for sid_wrapper in cur.fetchall():
         socketio.emit('json', new_state, room = sid_wrapper[0])
 
