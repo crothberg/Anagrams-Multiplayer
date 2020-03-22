@@ -6,7 +6,7 @@ import ZODB, ZODB.FileStorage, transaction
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-db_storage = ZODB.FileStorage.FileStorage('/tmp/anagrams_online.db')
+db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
 db = ZODB.DB(db_storage)
 if db.active_games is None:
     db.active_games = {}
