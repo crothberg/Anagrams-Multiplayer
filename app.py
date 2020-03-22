@@ -10,10 +10,7 @@ def hello():
 
 @app.route('/game', methods=['GET'])
 def visit_game():
-    try:
-        return 'Currently in game: ' + request.args.get('game_name', None)
-    except Exception as e:
-        return str(e)
+    return 'Currently in game: ' + request.args.get('game_name', None)
 
 @socketio.on('my event')
 def handle_my_custom_event(json):
