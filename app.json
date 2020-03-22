@@ -1,6 +1,14 @@
 {
-    "name": "name",
-    "description": "",
-    "image":"",
-    "repository":""
-}
+    "name": "Anagrams Online",
+    "description": "Description to go here.",
+    "keywords": [
+      "anagrams"
+    ],
+    "repository": "https://github.com/crothber/Anagrams-Multiplayer",
+    "image": "heroku/python",
+    "buildpacks": [
+      {
+        "url": "heroku/python"
+      }
+    ]
+  }
