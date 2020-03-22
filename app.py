@@ -21,7 +21,7 @@ def setup_db():
     cur.execute('CREATE TABLE GAMES (                   \
                     NAME TEXT)')
 
-#setup_db(db)
+setup_db(db)
 
 @app.route('/')
 def hello():
