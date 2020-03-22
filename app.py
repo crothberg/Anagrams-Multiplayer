@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO
 import game_data
-import ZODB, transaction
+import ZODB, ZODB.FileStorage, transaction
 
 app = Flask(__name__)
 socketio = SocketIO(app)
