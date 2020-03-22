@@ -34,10 +34,10 @@ def join_game(command):
     username = ''
     sid = request.sid
     user = game_data.user(username, sid)
-    game_obj = actives_games.get(game_name)
+    game_obj = active_games.get(game_name)
     if game_obj is None:
         ##create the game:
-        game_obj = game_room(user)
+        game_obj = game_data.game_room(user)
 
 if __name__ == '__main__':
     socketio.run(app)
