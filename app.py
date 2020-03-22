@@ -61,20 +61,20 @@ def join_game(command):
 @socketio.on('flip')
 def flip_tile(args):
     user = args.get('user')
-    flipped_tile, middle = flip_tile()
+    flipped_tile, middle = None, None #flip_tile()
     socketio.emit(
         'tile_flipped',
         {'user': user, 'tile': flipped_tile, 'middle': middle}
     )
 
 @socketio.on('steal')
-def flip_tile(args):
+def steal_word(args):
     user = args.get('user')
     word = args.get('word')
-    flipped_tile, updated_boards = flip_tile()
+    source, updated_boards = None, None #steal_word()
     socketio.emit(
         'word_stolen',
-        {'user': user, 'tile': flipped_tile, 'updated_boards': updated_boards}
+        {'user': user, 'word': word, 'source': source, 'updated_boards': updated_boards}
     )
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ window.onload = function() {
     var socket = io();
 
     socket.on('connect', function() {
-        socket.emit('join_game', {command: 'join_game', game_name: 'my_game'});
+        socket.emit('json', {command: 'join_game', game_name: 'my_game'});
     });
 
     socket.on('json', function(data) {
@@ -24,11 +24,11 @@ window.onload = function() {
         if (!word) {
             // If just enter (with no word), flip tile
             console.log('flipped!')
-            socket.emit('flip');
+            socket.emit('flip', {'user': 'username_goes_here'});
         } else {
             // If a word has been entered, try to steal it
             console.log('stole!');
-            socket.emit('steal', {'word': word});
+            socket.emit('steal', {'user': 'username_goes_here', 'word': word});
         }
         // Clear input
         $("#flip-action-text").val('');
