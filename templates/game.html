@@ -1,0 +1,14 @@
+<script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
+<script src="{{ url_for('static', filename='js/anagrams.js') }}"></script>
+
+<body>
+    <h1 id="game-title">Anagrams Game: {{ game_name }}</h1>
+    <form id="flip-action">
+        <input type="text" id="flip-action-text" name="flip-action-text" autofocus>
+    </form>
+    <br>
+    <button id="contest">
+        Contest
+    </button>
+</body>
