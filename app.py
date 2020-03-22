@@ -13,11 +13,11 @@ db = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 def setup_db():
     cur = db.cursor()
-    cur.execute('CREATE TABLE USERS (
-                    SID INT PRIMARY KEY     NOT NULL,
-                    NAME    TEXT            NOT NULL,
+    cur.execute('CREATE TABLE USERS (                   \
+                    SID INT PRIMARY KEY     NOT NULL,   \
+                    NAME    TEXT            NOT NULL,   \
                     GAME    TEXT                    )')
-    cur.execute('CREATE TABLE GAMES (
+    cur.execute('CREATE TABLE GAMES (                   \
                     NAME TEXT)')
 
 setup_db(db)
@@ -42,7 +42,7 @@ def user_disc():
     #remove users
     cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
     #remove newly empty games
-    cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (
+    cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
                     SELECT NAME FROM USERS)'
 def generate_game_state(cur, game_name):
     cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,))
