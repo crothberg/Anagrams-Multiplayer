@@ -17,7 +17,8 @@ def hello():
 
 @app.route('/game', methods=['GET'])
 def visit_game():
-    return 'Currently in game: ' + request.args.get('game_name', None)
+    game_name = request.args.get('game_name')
+    return render_template('game.html', game_name=game_name)
 
 @socketio.on('json')
 def json_dispacher(json):
