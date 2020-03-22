@@ -8,7 +8,9 @@ socketio = SocketIO(app)
 
 db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
 db = ZODB.DB(db_storage)
-if db.active_games is None:
+try:
+    active_games = db.active_games
+except AttributeError:
     db.active_games = {}
     transaction.commit()
 
