@@ -8,7 +8,7 @@
     }
     function setUsernameAndReload(){
         username = document.getElementById('username').value;
-        document.cookie = "username=Carmi";
+        document.cookie = "username="+username;
     }
     window.onload = function get_body() {
         var username = get_username();
