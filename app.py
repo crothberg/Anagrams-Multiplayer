@@ -8,9 +8,10 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 
 #db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
+#To run locally on Windows: set DATABASE_URL= user='postgres' host='localhost'
 
 DATABASE_URL = os.environ['DATABASE_URL']
-db = psycopg2.connect(DATABASE_URL, sslmode='require')
+db = psycopg2.connect(DATABASE_URL, sslmode='allow')
 
 def setup_db():
     cur = db.cursor()
@@ -84,6 +85,15 @@ def steal_word(args):
     socketio.emit(
         'word_stolen',
         {'user': user, 'word': word, 'source': source, 'updated_boards': updated_boards}
+    )
+
+@socketio.on('send_message')
+def send_message(args):
+    user = args.get('user')
+    message = args.get('message')
+    socketio.emit(
+        'message_sent',
+        {'user': user, 'message': message}
     )
 
 if __name__ == '__main__':

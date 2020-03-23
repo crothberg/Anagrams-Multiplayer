@@ -1,9 +1,15 @@
 window.onload = function() {
 
+    var username = Cookies.get("username");
+    if (!username) {
+        alert('Please enter a username before joining a game.')
+        window.location.href = '/';
+    }
+
     var socket = io();
 
     socket.on('connect', function() {
-        socket.emit('json', {command: 'join_game', game_name: 'my_game'});
+        socket.emit('json', {command: 'join_game'});
     });
 
     socket.on('json', function(data) {
@@ -24,16 +30,34 @@ window.onload = function() {
         if (!word) {
             // If just enter (with no word), flip tile
             console.log('flipped!')
-            socket.emit('flip', {'user': 'username_goes_here'});
+            socket.emit('flip', {'user': username});
         } else {
             // If a word has been entered, try to steal it
             console.log('stole!');
-            socket.emit('steal', {'user': 'username_goes_here', 'word': word});
+            socket.emit('steal', {'user': username, 'word': word});
         }
         // Clear input
         $("#flip-action-text").val('');
         // Prevent form from redirecting
         return false;
+    });
+
+    $("#chat-input-form").submit(function(event) {
+        message = $("#chat-input").val();
+        socket.emit('send_message', {'user': username, 'message': message})
+        // Clear input
+        $("#chat-input").val('');
+        // Prevent form from redirecting
+        return false;
+    });
+    socket.on("message_sent", function(data) {
+        console.log(data);
+        $("#chats").append(
+            `<div class="message">
+                <p class="message-sender">`+data['user']+`</p>
+                <p class="message-body">`+data['message']+`</p>
+            </div>`
+        )
     });
 
     $("#undo").click(function() {

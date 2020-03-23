@@ -1,6 +1,7 @@
 <head>
     <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/js.cookie.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/anagrams.js') }}"></script>
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
@@ -36,10 +37,6 @@
         <div id="chatbar">
             <div id="chat-title">CHATS</div>
             <div id="chats">
-                <div class="message">
-                    <p class="message-sender">Carmi</p>
-                    <p class="message-body">hey!</p>
-                </div>
             </div>
             <div id="chat-input-div">
                 <form id="chat-input-form">

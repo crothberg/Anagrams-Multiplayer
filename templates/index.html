@@ -1,2 +1,33 @@
-<button onclick="window.location.href='/game1'">Start Game1</button>
-<button onclick="window.location.href='/game2'">Join Game2</button>
+<script>
+    function get_username() {
+        if (document.cookie.length==0) {
+            return false;
+        } else {
+            return document.cookie.split("=")[1]
+        }        
+    }
+    function setUsernameAndReload(){
+        username = document.getElementById('username').value;
+        document.cookie = "username=Carmi";
+    }
+    window.onload = function get_body() {
+        var username = get_username();
+        var body = document.getElementsByTagName('body')[0];
+        if (username) {
+            body.insertAdjacentHTML('afterbegin', `
+            <button onclick="window.location.href='/game1'">Enter Game</button>
+            `)
+            // document.getElementById('username').focus();
+        } else {
+            body.insertAdjacentHTML('afterbegin', `
+            <form onsubmit="setUsernameAndReload()">
+                <input type="text" id="username" value="Please enter your name..." onfocus="this.select()">
+            </form>
+            `)
+            document.getElementById('username').focus();
+        }
+    }
+</script>
+
+<body>
+</body>
