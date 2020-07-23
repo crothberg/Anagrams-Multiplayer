@@ -15,7 +15,7 @@
         var body = document.getElementsByTagName('body')[0];
         if (username) {
             body.insertAdjacentHTML('afterbegin', `
-            <form action='/join_game'">
+            <form action='/join_game' method='post'">
                 <input type="text" name="game_name" value="Please enter a room name..." autofocus=True>
                 <input type="hidden" name="username" value="`+username+`">
             </form>
