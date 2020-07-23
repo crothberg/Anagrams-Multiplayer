@@ -18,9 +18,27 @@ window.onload = function() {
 
     socket.on('tile_flipped', function(data) {
         console.log(data);
+        var user = data['user'];
+        var letter = data['tile'];
+        var middle = data['middle'];
+
+        // Update status
+        var determiner = 'a'
+        if ('erioasfhlx'.includes(letter)) {determiner='an'};
+        $('#status').text(user+' flipped '+determiner+' \''+letter+'\'');
+
+        // Update middle
+        $('#middle').html(make_middle(middle));
     });
+
     socket.on('word_stolen', function(data) {
         console.log(data);
+        user = data['user'];
+        word = data['word'];
+        source = data['source'];
+
+        // Update status
+        $('#status').text(user+' took the word \''+word+'\' from '+source+'!')
     });
 
     $("#flip-action").focus();

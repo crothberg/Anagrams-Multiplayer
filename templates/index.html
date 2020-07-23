@@ -15,7 +15,10 @@
         var body = document.getElementsByTagName('body')[0];
         if (username) {
             body.insertAdjacentHTML('afterbegin', `
-            <button onclick="window.location.href='/game1'">Enter Game</button>
+            <form action='/join_game'">
+                <input type="text" name="game_name" value="Please enter a room name..." autofocus=True>
+                <input type="hidden" name="username" value="`+username+`">
+            </form>
             `)
             // document.getElementById('username').focus();
         } else {
