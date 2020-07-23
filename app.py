@@ -26,7 +26,7 @@ setup_db()
 def hello():
     return render_template('index.html')
 
-@app.route('/<game_name>')
+@app.route('/game/<game_name>')
 def visit_game(game_name):
     return render_template('game.html', game_name=game_name)
 
