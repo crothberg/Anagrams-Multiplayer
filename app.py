@@ -51,7 +51,7 @@ def user_disc():
                     SELECT NAME FROM USERS)')
 
 @app.route('/join_game', methods=['POST'])
-def join_game(command):
+def join_game():
     game_name = request.form['game_name']
     username = request.form['username']
     sid = request.sid
