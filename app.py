@@ -68,7 +68,8 @@ def join_game(command):
 
     cur.execute('INSERT INTO USERS (SID, NAME, GAME) VALUES (%s, %s, %s)', (sid, username, game_name))
 
-    cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state), game_name)
+    cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state), game_name))
+
     flask_socketio.join_room(game_name)
     state_update = game_state.generate_game_state()
     socketio.emit('json', state_update, room = game_name)
