@@ -1,8 +1,3 @@
-class user():
-    def __init__(self, name, sid):
-        self.name = name
-        self.sid = sid
-
 class game_room():
     def __init__(self, host, users=None, center=[]):
         if users is not None:
@@ -15,11 +10,11 @@ class game_room():
     def add_user(self, user):
         self.active_users.add(user)
 
-    def has_user(self, sid):
-        return len({user for user in self.active_users if user.sid == sid}) > 0
+    def has_user(self, username):
+        return username in self.active_users
 
-    def remove_user(self, sid):
-        self.active_users = {user for user in self.active_users if user.sid != sid}
+    def remove_user(self, removing):
+        self.active_users = [user for user in self.active_users if user != removing]
     
     def num_users(self):
         return len(self.active_users)
