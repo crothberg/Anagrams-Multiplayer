@@ -25,7 +25,7 @@ class game_room():
         return len(self.active_users)
 
     def generate_game_state(self):
-        return {host : self.host,
-                users : self.active_users,
-                center : self.center}
+        return {'host' : self.host,
+                'users' : self.active_users,
+                'center' : self.center}
 

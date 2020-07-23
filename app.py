@@ -21,7 +21,7 @@ def setup_db():
                     NAME    TEXT            NOT NULL,   \
                     GAME    TEXT                    )')
     cur.execute('CREATE TABLE GAMES (                   \
-                    NAME TEXT               NOT NULL,
+                    NAME TEXT               NOT NULL,   \
                     STATE TEXT              NOT NULL)')
 
 setup_db()
