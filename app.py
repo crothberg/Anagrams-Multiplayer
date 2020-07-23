@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO
+import flask_socketio
 import game_data
 import psycopg2
 import os
@@ -7,7 +8,9 @@ import os
 app = Flask(__name__)
 socketio = SocketIO(app)
 
+#db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
 #To run locally on Windows: set DATABASE_URL= user='postgres' host='localhost'
+
 DATABASE_URL = os.environ['DATABASE_URL']
 db = psycopg2.connect(DATABASE_URL, sslmode='allow')
 
@@ -18,7 +21,8 @@ def setup_db():
                     NAME    TEXT            NOT NULL,   \
                     GAME    TEXT                    )')
     cur.execute('CREATE TABLE GAMES (                   \
-                    NAME TEXT)')
+                    NAME TEXT               NOT NULL,   \
+                    STATE TEXT              NOT NULL)')
 
 setup_db()
 
@@ -32,8 +36,9 @@ def visit_game(game_name):
 
 @socketio.on('json')
 def json_dispacher(json):
-    if(json.get('command') == 'join_game'):
-        join_game(json)
+    pass
+    #if(json.get('command') == 'join_game'):
+    #   join_game(json)
 
 @socketio.on('disconnect')
 def user_disc():
@@ -45,32 +50,34 @@ def user_disc():
     cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
                     SELECT NAME FROM USERS)')
 
-def generate_game_state(cur, game_name):
-    cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,))
-    num_users = len(cur.fetchall())
-    return {'game_state' : {'num_users' : num_users}}
-
-def join_game(command):
-    game_name = command.get('game_name')
-    username = ''
+@app.route('/join_game', methods=['POST'])
+def join_game():
+    game_name = request.form['game_name']
+    username = request.form['username']
     sid = request.sid
     cur = db.cursor()
     cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
-    if cur.fetchone() is None:
+    game_state_str = cur.fetchone()
+    game_state = None
+    if game_state_str is None:
         ##create the game:
         cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)', (game_name,))
+        game_state = game_room(username)
+    else:
+        game_state = json.loads(game_state_str)
 
     cur.execute('INSERT INTO USERS (SID, NAME, GAME) VALUES (%s, %s, %s)', (sid, username, game_name))
 
-    new_state = generate_game_state(cur, game_name)
-    cur.execute('SELECT SID FROM USERS WHERE GAME = %s', (game_name,))
-    for sid_wrapper in cur.fetchall():
-        socketio.emit('json', new_state, room = sid_wrapper[0])
+    cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state), game_name))
+
+    flask_socketio.join_room(game_name)
+    state_update = game_state.generate_game_state()
+    socketio.emit('json', state_update, room = game_name)
 
 @socketio.on('flip')
 def flip_tile(args):
     user = args.get('user')
-    flipped_tile, middle = None, None
+    flipped_tile, middle = None, None #flip_tile()
     socketio.emit(
         'tile_flipped',
         {'user': user, 'tile': flipped_tile, 'middle': middle}
@@ -97,3 +104,4 @@ def send_message(args):
 
 if __name__ == '__main__':
     socketio.run(app)
+    #app.run(debug=True)
