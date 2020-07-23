@@ -36,6 +36,7 @@ def visit_game(game_name):
 
 @socketio.on('json')
 def json_dispacher(json):
+    pass
     #if(json.get('command') == 'join_game'):
     #   join_game(json)
 
