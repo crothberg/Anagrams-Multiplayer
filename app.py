@@ -8,7 +8,9 @@ import os
 app = Flask(__name__)
 socketio = SocketIO(app)
 
+#db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
 #To run locally on Windows: set DATABASE_URL= user='postgres' host='localhost'
+
 DATABASE_URL = os.environ['DATABASE_URL']
 db = psycopg2.connect(DATABASE_URL, sslmode='allow')
 
@@ -47,7 +49,6 @@ def user_disc():
     cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
                     SELECT NAME FROM USERS)')
 
-
 @app.route('/join_game')
 def join_game(command):
     game_name = request.game_name
@@ -74,7 +75,7 @@ def join_game(command):
 @socketio.on('flip')
 def flip_tile(args):
     user = args.get('user')
-    flipped_tile, middle = None, None
+    flipped_tile, middle = None, None #flip_tile()
     socketio.emit(
         'tile_flipped',
         {'user': user, 'tile': flipped_tile, 'middle': middle}
@@ -101,3 +102,4 @@ def send_message(args):
 
 if __name__ == '__main__':
     socketio.run(app)
+    #app.run(debug=True)
