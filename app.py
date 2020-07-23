@@ -17,7 +17,6 @@ db = psycopg2.connect(DATABASE_URL, sslmode='allow')
 def setup_db():
     cur = db.cursor()
     cur.execute('CREATE TABLE USERS (                   \
-                    SID TEXT PRIMARY KEY    NOT NULL,   \
                     NAME    TEXT            NOT NULL,   \
                     GAME    TEXT                    )')
     cur.execute('CREATE TABLE GAMES (                   \
@@ -42,19 +41,18 @@ def json_dispacher(json):
 
 @socketio.on('disconnect')
 def user_disc():
-    sid = request.sid
+    pass
     cur = db.cursor()
     #remove users
-    cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
+    #cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
     #remove newly empty games
-    cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
-                    SELECT NAME FROM USERS)')
+    #cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
+    #                SELECT NAME FROM USERS)')
 
 @app.route('/join_game', methods=['POST'])
 def join_game():
     game_name = request.form['game_name']
     username = request.form['username']
-    sid = request.sid
     cur = db.cursor()
     cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
     game_state_str = cur.fetchone()
@@ -66,7 +64,7 @@ def join_game():
     else:
         game_state = json.loads(game_state_str)
 
-    cur.execute('INSERT INTO USERS (SID, NAME, GAME) VALUES (%s, %s, %s)', (sid, username, game_name))
+    cur.execute('INSERT INTO USERS (NAME, GAME) VALUES (%s, %s)', (username, game_name))
 
     cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state), game_name))
 
