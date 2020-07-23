@@ -4,9 +4,13 @@ class user():
         self.sid = sid
 
 class game_room():
-    def __init__(self, host):
-        self.active_users = {host}
+    def __init__(self, host, users=None, center=[]):
+        if users is not None:
+            self.active_users = users
+        else:
+            self.active_users = [host]
         self.host = host
+        self.center = center
     
     def add_user(self, user):
         self.active_users.add(user)
@@ -21,5 +25,7 @@ class game_room():
         return len(self.active_users)
 
     def generate_game_state(self):
-        return {'game_state' : {'num_users' : self.num_users()}}
+        return {host : self.host,
+                users : self.active_users,
+                center : self.center}
 
