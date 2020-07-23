@@ -50,10 +50,10 @@ def user_disc():
     cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
                     SELECT NAME FROM USERS)')
 
-@app.route('/join_game')
+@app.route('/join_game', methods=['POST'])
 def join_game(command):
-    game_name = request.game_name
-    username = request.username
+    game_name = request.form['game_name']
+    username = request.form['username']
     sid = request.sid
     cur = db.cursor()
     cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
