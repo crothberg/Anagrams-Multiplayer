@@ -3,6 +3,11 @@
 
 <script>
     var socket = io();
+    socket.on('json', function(data) {
+        if (data['command'] == 'redirect') {
+            window.location.replace(data['url']);
+        }
+    });
 
     function get_username() {
         if (document.cookie.length==0) {
