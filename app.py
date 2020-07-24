@@ -67,7 +67,7 @@ def join_game(username, game_name, sid):
 
     flask_socketio.join_room(game_name)
     state_update = game_state.generate_game_state()
-    socketio.emit('json' {'command' : 'redirect', 'url' : '/game/' + game_name}, room = sid)
+    socketio.emit('json', {'command' : 'redirect', 'url' : '/game/' + game_name}, room = sid)
     socketio.emit('json', state_update, room = game_name)
 
 @socketio.on('flip')
