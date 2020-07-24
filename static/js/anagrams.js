@@ -9,17 +9,12 @@ window.onload = function() {
     var socket = io();
 
     socket.on('connect', function() {
-        socket.emit('json', {command: 'join_game'});
+        socket.emit('json', {command: 'join_game', username: username, game_name: window.location.pathname.split().pop()});
     });
 
     socket.on('json', function(data) {
         console.log(data);
     });
-
-    socket.on('add_user', function(data) {
-        console.log(data)
-        var 
-    })
 
     socket.on('tile_flipped', function(data) {
         console.log(data);

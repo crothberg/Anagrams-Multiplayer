@@ -1,14 +1,4 @@
-<script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
-
 <script>
-    var socket = io();
-    socket.on('json', function(data) {
-        if (data['command'] == 'redirect') {
-            window.location.replace(data['url']);
-        }
-    });
-
     function get_username() {
         if (document.cookie.length==0) {
             return false;
@@ -20,26 +10,20 @@
         username = document.getElementById('username').value;
         document.cookie = "username="+username;
     }
-    function join_room() {
-        var game_name = $("#game_name").val();
-        var username = get_username();
-        socket.emit('json', {'command':'join_game', 'username':username, 'game_name':game_name})
-        return false
-    }
-
     window.onload = function get_body() {
         var username = get_username();
         var body = document.getElementsByTagName('body')[0];
         if (username) {
             body.insertAdjacentHTML('afterbegin', `
-            <form onsubmit="return join_room();">
-                <input type="text" id="game_name" value="Please enter a room name..." onfocus="this.select()"/>
+            <form action='/game' method='post'">
+                <input type="text" name="game_name" value="Please enter a room name..." autofocus=True onfocus="this.select()">
+                <input type="hidden" name="username" value="`+username+`">
             </form>
             `)
-            document.getElementById('game_name').focus();
+            // document.getElementById('username').focus();
         } else {
             body.insertAdjacentHTML('afterbegin', `
-            <form onsubmit="setUsernameAndReload();">
+            <form onsubmit="setUsernameAndReload()">
                 <input type="text" id="username" value="Please enter your name..." onfocus="this.select()">
             </form>
             `)

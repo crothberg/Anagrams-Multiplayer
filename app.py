@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from flask_socketio import SocketIO
 import flask_socketio
 import game_data
@@ -30,14 +30,18 @@ setup_db()
 def hello():
     return render_template('index.html')
 
+@app.route('/game', methods=['POST'])
+def redirect_to_game():
+    return redirect('/game/'+request.form['game_name'])
+
 @app.route('/game/<game_name>')
 def visit_game(game_name):
     return render_template('game.html', game_name=game_name)
 
 @socketio.on('json')
 def json_dispacher(input_json):
-    if(input_json.get('command') == 'join_game'):
-       join_game(input_json['username'], input_json['game_name'], request.sid)
+    if input_json.get('command') == 'join_game':
+        join_game(input_json['username'], input_json['game_name'], request.sid)
 
 @socketio.on('disconnect')
 def user_disc():
