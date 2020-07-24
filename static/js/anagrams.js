@@ -8,9 +8,9 @@ window.onload = function() {
 
     var socket = io();
 
-    // socket.on('connect', function() {
-    //     socket.emit('json', {command: 'join_game'});
-    // });
+    socket.on('connect', function() {
+        socket.emit('json', {command: 'join_game'});
+    });
 
     socket.on('json', function(data) {
         console.log(data);
