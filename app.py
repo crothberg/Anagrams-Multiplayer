@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO
 import flask_socketio
-import game_data
+from game_data import game_room
 import psycopg2
 import os
 import json
