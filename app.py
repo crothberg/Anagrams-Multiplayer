@@ -38,11 +38,6 @@ def redirect_to_game():
 def visit_game(game_name):
     return render_template('game.html', game_name=game_name)
 
-@socketio.on('json')
-def json_dispacher(input_json):
-    if(input_json.get('command') == 'join_game'):
-       join_game(input_json['username'], input_json['game_name'])
-
 @socketio.on('disconnect')
 def user_disc():
     pass
@@ -53,7 +48,10 @@ def user_disc():
     #cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
     #                SELECT NAME FROM USERS)')
 
-def join_game(username, game_name):
+@socketio.on('join_game')
+def join_game(data):
+    username = data['username']
+    game_name = data['game_name']
     cur = db.cursor()
     cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
     game_state_str = cur.fetchone()
