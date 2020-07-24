@@ -60,6 +60,8 @@ def join_game(username, game_name):
         game_state = game_data.game_room(username)
     else:
         game_state = game_data.deserialize_game_room(json.loads(game_state_str))
+        if game_state.has_user(username):
+            return None
 
     cur.execute('INSERT INTO USERS (NAME, GAME) VALUES (%s, %s)', (username, game_name))
 
