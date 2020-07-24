@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO
 import flask_socketio
-from game_data import game_room
+import game_data
 import psycopg2
 import os
 import json
@@ -61,13 +61,13 @@ def join_game():
     if game_state_str is None:
         ##create the game:
         cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)', (game_name,))
-        game_state = game_room(username)
+        game_state = game_data.game_room(username)
     else:
-        game_state = json.loads(game_state_str)
+        game_state = game_data.deserialize_game_room(json.loads(game_state_str))
 
     cur.execute('INSERT INTO USERS (NAME, GAME) VALUES (%s, %s)', (username, game_name))
 
-    cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state), game_name))
+    cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
 
     flask_socketio.join_room(game_name)
     state_update = game_state.generate_game_state()

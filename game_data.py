@@ -24,3 +24,5 @@ class game_room():
                 'users' : self.active_users,
                 'center' : self.center}
 
+def deserialize_game_room(game_state):
+    return game_room(game_state['host'], game_state['users'], game_state['center'])
