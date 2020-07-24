@@ -22,7 +22,7 @@ def setup_db():
                     GAME    TEXT                    )')
     cur.execute('CREATE TABLE GAMES (                   \
                     NAME TEXT               NOT NULL,   \
-                    STATE TEXT              NOT NULL)')
+                    STATE TEXT )')
 
 setup_db()
 
@@ -60,7 +60,7 @@ def join_game():
     game_state = None
     if game_state_str is None:
         ##create the game:
-        cur.execute('INSERT INTO GAMES (NAME) VALUES (%s, %s)', (game_name, json.dumps(game_state)))
+        cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)', (game_name,)
         game_state = game_room(username)
     else:
         game_state = json.loads(game_state_str)
