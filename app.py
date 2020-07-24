@@ -37,7 +37,7 @@ def visit_game(game_name):
 @socketio.on('json')
 def json_dispacher(input_json):
     if(input_json.get('command') == 'join_game'):
-       join_game(input_json['username'], input_json['game_name'], request.sid)
+       join_game(input_json['username'], input_json['game_name'])
 
 @socketio.on('disconnect')
 def user_disc():
@@ -49,7 +49,7 @@ def user_disc():
     #cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
     #                SELECT NAME FROM USERS)')
 
-def join_game(username, game_name, sid):
+def join_game(username, game_name):
     cur = db.cursor()
     cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
     game_state_str = cur.fetchone()
@@ -67,7 +67,6 @@ def join_game(username, game_name, sid):
 
     flask_socketio.join_room(game_name)
     state_update = game_state.generate_game_state()
-    socketio.emit('json', {'command' : 'redirect', 'url' : '/game/' + game_name}, room = sid)
     socketio.emit('json', state_update, room = game_name)
 
 @socketio.on('flip')
