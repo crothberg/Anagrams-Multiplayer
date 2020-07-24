@@ -16,6 +16,11 @@ window.onload = function() {
         console.log(data);
     });
 
+    socket.on('add_user', function(data) {
+        console.log(data)
+        var 
+    })
+
     socket.on('tile_flipped', function(data) {
         console.log(data);
         var user = data['user'];
@@ -47,11 +52,11 @@ window.onload = function() {
         word = $("#flip-action-text").val();
         if (!word) {
             // If just enter (with no word), flip tile
-            console.log('flipped!')
+            console.log('A letter has been flipped!')
             socket.emit('flip', {'user': username});
         } else {
             // If a word has been entered, try to steal it
-            console.log('stole!');
+            console.log('A word has been stolen!');
             socket.emit('steal', {'user': username, 'word': word});
         }
         // Clear input
