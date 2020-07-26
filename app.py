@@ -58,7 +58,8 @@ def get_logs():
     return '<br>'.join(['%s: %s' % (log_line[1], log_line[0]) for log_line in logs])
 
 @socketio.on('disconnect')
-def user_disc(sid):
+def user_disc():
+    sid = request.sid
     cur = db.cursor()
     cur.execute('SELECT USERNAME FROM USERS WHERE SID = %s', (sid,))
     username = cur.fetchone()
@@ -67,14 +68,14 @@ def user_disc(sid):
         return
     username = username[0]
     print_log_line('User %s (%s) leaving' % (username, sid))
-    #remove users
     #cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
     #remove newly empty games
     #cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
     #                SELECT NAME FROM USERS)')
 
 @socketio.on('join_game')
-def join_game(sid, data):
+def join_game(data):
+    sid = request.sid
     username = data['username']
     game_name = data['game_name']
     print_log_line('user %s (%s) joining game %s' % (username, sid, game_name))
