@@ -15,6 +15,8 @@ class game_room():
 
     def remove_user(self, removing):
         self.active_users = [user for user in self.active_users if user != removing]
+        if removing == self.host:
+            self.host = self.active_users[0]
     
     def num_users(self):
         return len(self.active_users)

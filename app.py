@@ -61,17 +61,27 @@ def get_logs():
 def user_disc():
     sid = request.sid
     cur = db.cursor()
-    cur.execute('SELECT NAME FROM USERS WHERE SID = %s', (sid,))
-    username = cur.fetchone()
-    if username is None:
-        print_log_line('Phantom sid tried to disconnect: %s', (sid,))
+    cur.execute('SELECT NAME, GAME FROM USERS WHERE SID = %s', (sid,))
+    user_data = cur.fetchone()
+    if user_data is None:
+        print_log_line('Phantom sid tried to disconnect: %s' % (sid,))
         return
-    username = username[0]
-    print_log_line('User %s (%s) leaving' % (username, sid))
-    #cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
-    #remove newly empty games
-    #cur.execute('DELETE FROM GAMES WHERE NAME NOT IN (  \
-    #                SELECT NAME FROM USERS)')
+    username = user_data[0]
+    game = user_data[1]
+    print_log_line('User %s (%s) leaving %s' % (username, sid, game))
+    cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game,))
+    game_state_str = cur.fetchone()
+    if game_state_str is None:
+        print_log_line('Missing game data: %s', % (game,))
+        return
+    game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
+    game_state.remove_user(username)
+    if game_state.num_users() == 0:
+        cur.execute('DELETE FROM GAMES WHERE NAME IS %s', (game,))
+    else:
+        cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
+
+    cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
 
 @socketio.on('join_game')
 def join_game(data):
