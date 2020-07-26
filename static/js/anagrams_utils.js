@@ -7,8 +7,9 @@ function make_player(player_name) {
 }
 
 function make_middle(letters) {
+    console.log(typeof letters)
     var middle = '';
-    letters.foreach(letter =>
+    letters.forEach(letter =>
         middle += '<span class="tile">'+letter+'</span>'
     );
     return middle;

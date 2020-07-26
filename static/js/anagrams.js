@@ -18,13 +18,11 @@ window.onload = function() {
     });
 
     socket.on('game_state_update', function(data) {
+        console.log('GAME STATE UPDATED')
         console.log(data);
         var status = data['status'];
-        console.log(data['game_state'])
-        game_state = JSON.parse(data['game_state']);
-        console.log(game_state)
-        var users = data['users'];
-        var middle = data['middle'];
+        var users = data['game_state']['users'];
+        var middle = data['game_state']['middle'];
         
         // // Update status
         // var determiner = 'a'
@@ -33,7 +31,7 @@ window.onload = function() {
         $('#status').text(status);
         
         // Update all users simultaneously
-        $("#player-space").html(make_player_spaces(data['users']));
+        // $("#player-space").html(make_player_spaces(data['users']));
         // Update middle
         $('#middle').html(make_middle(middle));
     });
@@ -54,8 +52,8 @@ window.onload = function() {
         word = $("#flip-action-text").val();
         if (!word) {
             // If just enter (with no word), flip tile
-            console.log('A letter has been flipped!')
             socket.emit('flip', {'user': username, 'room': game_name});
+            console.log('Flip request sent.')
         } else {
             // If a word has been entered, try to steal it
             console.log('A word has been stolen!');
