@@ -59,7 +59,7 @@ window.onload = function() {
 
     $("#chat-input-form").submit(function(event) {
         message = $("#chat-input").val();
-        socket.emit('send_message', {'user': username, 'message': message})
+        socket.emit('send_message', {'user': username, 'message': message, 'room': game_name})
         // Clear input
         $("#chat-input").val('');
         // Prevent form from redirecting

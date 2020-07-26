@@ -133,6 +133,7 @@ def steal_word(args):
 
 @socketio.on('send_message')
 def send_message(args):
+    print_log_line(str(args))
     user = args.get('user')
     message = args.get('message')
     room = args.get('room')
