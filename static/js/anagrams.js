@@ -13,6 +13,10 @@ window.onload = function() {
         socket.emit('join_game', {'username': username, 'game_name': game_name});
     });
 
+    socket.on('user_added', function(data) {
+        $("#player-space").append(make_player(data['username']));
+    });
+
     socket.on('tile_flipped', function(data) {
         console.log(data);
         var middle = data['middle'];
