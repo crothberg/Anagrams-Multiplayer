@@ -70,7 +70,7 @@ def join_game(data):
     game_name = data['game_name']
     print_log_line('user %s joining game %s' % (username, game_name))
     cur = db.cursor()
-    cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
+    cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game_name,))
     game_state_str = cur.fetchone()
     game_state = None
     if game_state_str is None:
