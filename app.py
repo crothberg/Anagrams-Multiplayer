@@ -117,7 +117,7 @@ def join_game(data):
     new_state = game_state.generate_game_state()
     update_message = 'User %s has joined' % (username,)
     socketio.emit('game_state_update',
-                    {'game_state' : new_state, 'status' : update_message}
+                    {'game_state' : new_state, 'status' : update_message},
                     room = game_name)
 
 @socketio.on('flip')
@@ -125,7 +125,7 @@ def flip_tile(args):
     user = args.get('user')
     game = args.get('room')
     cur = db.cursor()
-    cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (room,))
+    cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game,))
     game_state_str = cur.fetchone()
     if game_state_str is None:
         print_log_line('user %s attempted to acces missing room %s' % (user, game))
