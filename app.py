@@ -44,6 +44,7 @@ setup_db()
 @app.route('/')
 def hello():
     return render_template('index.html')
+
 @app.route('/status')
 def get_status():
     cur = db.cursor()
@@ -105,7 +106,6 @@ def join_game(data):
     sid = request.sid
     username = data['username']
     game_name = data['game_name']
-    print_log_line('user %s (%s) joining game %s' % (username, sid, game_name))
     cur = db.cursor()
     cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game_name,))
     game_state_str = cur.fetchone()
@@ -115,12 +115,14 @@ def join_game(data):
         cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)', (game_name,))
         game_state = game_data.game_room(username)
     else:
-        print_log_line('gss: %s' % (game_state_str[0],))
         game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
         if game_state.has_user(username):
-            return None
+            cur.execute('UPDATE USERS SET SID = %s WHERE NAME = %s', (sid, username))
+            print_log_line('%s updating sid to %s' % (username, sid))
+            return
         game_state.add_user(username)
 
+    print_log_line('user %s (%s) joining game %s' % (username, sid, game_name))
     cur.execute('INSERT INTO USERS (NAME, SID, GAME) VALUES (%s, %s, %s)', (username, sid, game_name))
 
     cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
