@@ -20,7 +20,8 @@ window.onload = function() {
     socket.on('game_state_update', function(data) {
         console.log(data);
         var status = data['status'];
-        game_state = JSON(data['game_state']);
+        console.log(data['game_state'])
+        game_state = JSON.parse(data['game_state']);
         console.log(game_state)
         var users = data['users'];
         var middle = data['middle'];

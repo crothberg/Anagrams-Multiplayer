@@ -85,8 +85,8 @@ def user_disc():
     new_state = game_state.generate_game_state()
     update_message = 'User %s has left' % (username,)
     socketio.emit('game_state_update',
-        {'game_state': new_state, 'status': update_message},
-        room = game_name
+        {'game_state' : new_state, 'status' : update_message},
+        room = game
     )
 
 @socketio.on('join_game')
@@ -136,7 +136,9 @@ def flip_tile(args):
     game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
     flipped_tile = game_state.flip_tile()
     new_state = json.dumps(game_state.generate_game_state())
+    cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(new_state), game))
     state_update = 'User %s Flipped a %s'  % (user, flipped_tile)
+    print_log_line('%s has flipped a %s in %s' % (user, game, flipped_tile))
     socketio.emit(
         'game_state_update',
         {'status' : state_update , 'game_state': new_state},
