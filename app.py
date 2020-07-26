@@ -61,7 +61,7 @@ def get_logs():
 def user_disc():
     sid = request.sid
     cur = db.cursor()
-    cur.execute('SELECT USERNAME FROM USERS WHERE SID = %s', (sid,))
+    cur.execute('SELECT NAME FROM USERS WHERE SID = %s', (sid,))
     username = cur.fetchone()
     if username is None:
         print_log_line('Phantom sid tried to disconnect: %s', (sid,))
