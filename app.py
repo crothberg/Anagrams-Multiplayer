@@ -110,7 +110,7 @@ def join_game(data):
 
     flask_socketio.join_room(game_name)
     state_update = game_state.generate_game_state()
-    socketio.emit('json', state_update, room = game_name)
+    socketio.emit('game_state_update', state_update, room = game_name)
 
 @socketio.on('flip')
 def flip_tile(args):
