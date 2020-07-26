@@ -56,8 +56,8 @@ def get_logs():
 
 @socketio.on('disconnect')
 def user_disc():
-    pass
-    cur = db.cursor()
+    print_log_line('User leaving')
+    #cur = db.cursor()
     #remove users
     #cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
     #remove newly empty games
