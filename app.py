@@ -23,6 +23,9 @@ def setup_db():
     cur.execute('CREATE TABLE GAMES (                   \
                     NAME TEXT               NOT NULL,   \
                     STATE TEXT )')
+    cur.execute('CREATE TABLE LOGS  (                   \
+                    LOG_LINE TEXT           NOT NULL,
+                    TIME TIMESTAMP          NOT NULL)')
 
 setup_db()
 
@@ -44,6 +47,13 @@ def redirect_to_game():
 def visit_game(game_name):
     return render_template('game.html', game_name=game_name)
 
+@app.route('/logs')
+def get_logs():
+    cur = db.cursor()
+    cur.execute('SELECT LOG_LINE, TIME FROM LOGS ORDER BY TIME DESC LIMIT 30')
+    logs = cur.fetchall()
+    return '\n'.join(['%s: %s' % (log_line[1], log_line[0]) for log_line in logs)
+
 @socketio.on('disconnect')
 def user_disc():
     pass
@@ -58,6 +68,7 @@ def user_disc():
 def join_game(data):
     username = data['username']
     game_name = data['game_name']
+    print_log_line('user %s joining game %s' % (username, game_name))
     cur = db.cursor()
     cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
     game_state_str = cur.fetchone()
@@ -107,6 +118,10 @@ def send_message(args):
         'message_sent',
         {'user': user, 'message': message}
     )
+
+def print_log_line(log_line):
+    cur = db.cursor()
+    cur.execute('INSERT INTO LOGS (LOG_LINE, TIME) VALUES (%s, NOW())', (log_line,))
 
 if __name__ == '__main__':
     socketio.run(app)
