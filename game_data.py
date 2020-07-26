@@ -42,7 +42,7 @@ class game_room():
         possibilities = self.letters_remaining()
         if len(possibilities) == 0:
             return None
-        new_tile = random.choice(possiblities)
+        new_tile = random.choice(possibilities)
         self.middle.append(new_tile)
         return new_tile
 
