@@ -33,13 +33,13 @@ def setup_db():
         destroy_db()
         setup_db()
 
-setup_db()
-
 def destroy_db():
     cur = db.cursor()
     cur.execute('DROP TABLE USERS')
     cur.execute('DROP TABLE GAMES')
     cur.execute('DROP TABLE LOGS')
+
+setup_db()
 
 @app.route('/')
 def hello():
