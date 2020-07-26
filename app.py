@@ -18,18 +18,28 @@ db.autocommit = True
 
 def setup_db():
     cur = db.cursor()
-    cur.execute('CREATE TABLE USERS (                   \
-                    NAME    TEXT            NOT NULL,   \
-                    SID     TEXT            NOT NULL,   \
-                    GAME    TEXT                    )')
-    cur.execute('CREATE TABLE GAMES (                   \
-                    NAME TEXT               NOT NULL,   \
-                    STATE TEXT )')
-    cur.execute('CREATE TABLE LOGS  (                   \
-                    LOG_LINE TEXT           NOT NULL,   \
-                    TIME TIMESTAMP          NOT NULL)')
+    try:
+        cur.execute('CREATE TABLE USERS (                   \
+                        NAME    TEXT            NOT NULL,   \
+                        SID     TEXT            NOT NULL,   \
+                        GAME    TEXT                    )')
+        cur.execute('CREATE TABLE GAMES (                   \
+                        NAME TEXT               NOT NULL,   \
+                        STATE TEXT )')
+        cur.execute('CREATE TABLE LOGS  (                   \
+                        LOG_LINE TEXT           NOT NULL,   \
+                        TIME TIMESTAMP          NOT NULL)')
+    except Exception:
+        destroy_db()
+        setup_db()
 
 setup_db()
+
+def destroy_db():
+    cur = db.cursor()
+    cur.execute('DROP TABLE USERS')
+    cur.execute('DROP TABLE GAMES')
+    cur.execute('DROP TABLE LOGS')
 
 @app.route('/')
 def hello():
