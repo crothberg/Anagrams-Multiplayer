@@ -15,14 +15,14 @@ window.onload = function() {
 
     socket.on('tile_flipped', function(data) {
         console.log(data);
-        var user = data['user'];
-        var letter = data['tile'];
         var middle = data['middle'];
+        var status = data['status'];
 
-        // Update status
-        var determiner = 'a'
-        if ('erioasfhlx'.includes(letter)) {determiner='an'};
-        $('#status').text(user+' flipped '+determiner+' \''+letter+'\'');
+        // // Update status
+        // var determiner = 'a'
+        // if ('erioasfhlx'.includes(letter)) {determiner='an'};
+        // $('#status').text(user+' flipped '+determiner+' \''+letter+'\'');
+        $('#status').text(status);
 
         // Update middle
         $('#middle').html(make_middle(middle));
@@ -45,7 +45,7 @@ window.onload = function() {
         if (!word) {
             // If just enter (with no word), flip tile
             console.log('A letter has been flipped!')
-            socket.emit('flip', {'user': username});
+            socket.emit('flip', {'user': username, 'room': game_name});
         } else {
             // If a word has been entered, try to steal it
             console.log('A word has been stolen!');
