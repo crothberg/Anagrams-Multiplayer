@@ -1,11 +1,14 @@
+import random
+
+letters = ['abcdefghijklmnopqrstuvwxyz']
 class game_room():
-    def __init__(self, host, users=None, center=[]):
+    def __init__(self, host, users=None, middle=[]):
         if users is not None:
             self.active_users = users
         else:
             self.active_users = [host]
         self.host = host
-        self.center = center
+        self.middle = middle
     
     def add_user(self, user):
         self.active_users.append(user)
@@ -24,7 +27,12 @@ class game_room():
     def generate_game_state(self):
         return {'host' : self.host,
                 'users' : self.active_users,
-                'center' : self.center}
+                'middle' : self.middle}
+    def flip_tile():
+        new_tile = random.choice(letters)
+        self.middle.append(new_tile)
+        return new_tile
+
 
 def deserialize_game_room(game_state):
-    return game_room(game_state['host'], game_state['users'], game_state['center'])
+    return game_room(game_state['host'], game_state['users'], game_state['middle'])

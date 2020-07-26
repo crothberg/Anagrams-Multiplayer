@@ -115,10 +115,21 @@ def join_game(data):
 @socketio.on('flip')
 def flip_tile(args):
     user = args.get('user')
-    flipped_tile, middle = None, None #flip_tile()
+    game = args.get('room')
+    cur = db.cursor()
+    cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (room,))
+    game_state_str = cur.fetchone()
+    if game_state_str is None:
+        print_log_line('user %s attempted to acces missing room %s' % (user, game))
+        return
+
+    game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
+    flipped_tile = game_state.flip_tile()
+    new_state = json.dumps(game_state.generate_game_state())
     socketio.emit(
         'tile_flipped',
-        {'user': user, 'tile': flipped_tile, 'middle': middle}
+        {'user': user, 'tile': flipped_tile, 'game_state': new_state},
+        room = game
     )
 
 @socketio.on('steal')
