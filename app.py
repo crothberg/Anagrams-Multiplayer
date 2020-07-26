@@ -78,6 +78,7 @@ def join_game(data):
         cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)', (game_name,))
         game_state = game_data.game_room(username)
     else:
+        print_log_line('gss: %s' % (game_state_str[0],))
         game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
         if game_state.has_user(username):
             return None
