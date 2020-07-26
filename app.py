@@ -31,7 +31,8 @@ def hello():
     return render_template('index.html')
 @app.route('/status')
 def get_status():
-    cur = db.cursor('SELECT * FROM GAMES')
+    cur = db.cursor()
+    cur.execute('SELECT * FROM GAMES')
     game_status = cur.fetchall()
     return json.dumps(game_status)
 
