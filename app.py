@@ -82,6 +82,11 @@ def user_disc():
         cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game))
 
     cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
+    new_state = game_state.generate_game_state()
+    update_message = 'User %s has left' % (username,)
+    socketio.emit('game_state_update',
+                        {'game_state' : new_state, 'status' : update_message}
+                                            room = game_name)
 
 @socketio.on('join_game')
 def join_game(data):
@@ -109,8 +114,11 @@ def join_game(data):
     cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
 
     flask_socketio.join_room(game_name)
-    state_update = game_state.generate_game_state()
-    socketio.emit('game_state_update', state_update, room = game_name)
+    new_state = game_state.generate_game_state()
+    update_message = 'User %s has joined' % (username,)
+    socketio.emit('game_state_update',
+                    {'game_state' : new_state, 'status' : update_message}
+                    room = game_name)
 
 @socketio.on('flip')
 def flip_tile(args):
@@ -126,9 +134,10 @@ def flip_tile(args):
     game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
     flipped_tile = game_state.flip_tile()
     new_state = json.dumps(game_state.generate_game_state())
+    state_update = 'User %s Flipped a %s'  % (user, flipped_tile)
     socketio.emit(
-        'tile_flipped',
-        {'user': user, 'tile': flipped_tile, 'game_state': new_state},
+        'game_state_update',
+        {'status' : state_update , 'game_state': new_state},
         room = game
     )
 
