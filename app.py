@@ -123,6 +123,7 @@ def join_game(data):
 
 @socketio.on('flip')
 def flip_tile(args):
+    print_log_line('flip attempt')
     user = args.get('user')
     game = args.get('room')
     cur = db.cursor()
