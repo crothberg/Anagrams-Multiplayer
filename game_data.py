@@ -34,7 +34,7 @@ class game_room():
 
     def letters_remaining(self):
         current_letters = letters.copy()
-        for letter in self.letters_already_flipped:
+        for letter in self.letters_already_flipped():
             current_letters.remove(letter)
 
     def flip_tile(self):
