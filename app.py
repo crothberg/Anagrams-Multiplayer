@@ -24,7 +24,7 @@ def setup_db():
                     NAME TEXT               NOT NULL,   \
                     STATE TEXT )')
     cur.execute('CREATE TABLE LOGS  (                   \
-                    LOG_LINE TEXT           NOT NULL,
+                    LOG_LINE TEXT           NOT NULL,   \
                     TIME TIMESTAMP          NOT NULL)')
 
 setup_db()
