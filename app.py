@@ -37,7 +37,9 @@ def get_status():
     cur = db.cursor()
     cur.execute('SELECT * FROM GAMES')
     game_status = cur.fetchall()
-    return json.dumps(game_status)
+    cur.execute('SELECT * FROM USERS')
+    user_status = cur.fetchall()
+    return json.dumps(game_status) + '<br>' + json.dumps(user_status)
 
 @app.route('/game', methods=['POST'])
 def redirect_to_game():
