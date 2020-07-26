@@ -14,6 +14,7 @@ socketio = SocketIO(app)
 
 DATABASE_URL = os.environ['DATABASE_URL']
 db = psycopg2.connect(DATABASE_URL, sslmode='allow')
+db.autocommit = True
 
 def setup_db():
     cur = db.cursor()
