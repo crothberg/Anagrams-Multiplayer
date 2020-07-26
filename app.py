@@ -60,14 +60,14 @@ def join_game(data):
     game_name = data['game_name']
     cur = db.cursor()
     cur.execute('SELECT NAME FROM GAMES WHERE NAME = %s', (game_name,))
-    game_state_str = cur.fetchone()[0]
+    game_state_str = cur.fetchone()
     game_state = None
     if game_state_str is None:
         ##create the game:
         cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)', (game_name,))
         game_state = game_data.game_room(username)
     else:
-        game_state = game_data.deserialize_game_room(json.loads(game_state_str))
+        game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
         if game_state.has_user(username):
             return None
         game_state.add_user(username)
