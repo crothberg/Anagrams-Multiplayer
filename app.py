@@ -19,6 +19,7 @@ def setup_db():
     cur = db.cursor()
     cur.execute('CREATE TABLE USERS (                   \
                     NAME    TEXT            NOT NULL,   \
+                    SID     TEXT            NOT NULL,   \
                     GAME    TEXT                    )')
     cur.execute('CREATE TABLE GAMES (                   \
                     NAME TEXT               NOT NULL,   \
@@ -57,9 +58,15 @@ def get_logs():
     return '<br>'.join(['%s: %s' % (log_line[1], log_line[0]) for log_line in logs])
 
 @socketio.on('disconnect')
-def user_disc():
-    print_log_line('User leaving')
-    #cur = db.cursor()
+def user_disc(sid):
+    cur = db.cursor()
+    cur.execute('SELECT USERNAME FROM USERS WHERE SID = %s', (sid,))
+    username = cur.fetchone()
+    if username is None:
+        print_log_line('Phantom sid tried to disconnect: %s', (sid,))
+        return
+    username = username[0]
+    print_log_line('User %s (%s) leaving' % (username, sid))
     #remove users
     #cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
     #remove newly empty games
@@ -67,10 +74,10 @@ def user_disc():
     #                SELECT NAME FROM USERS)')
 
 @socketio.on('join_game')
-def join_game(data):
+def join_game(sid, data):
     username = data['username']
     game_name = data['game_name']
-    print_log_line('user %s joining game %s' % (username, game_name))
+    print_log_line('user %s (%s) joining game %s' % (username, sid, game_name))
     cur = db.cursor()
     cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game_name,))
     game_state_str = cur.fetchone()
@@ -86,7 +93,7 @@ def join_game(data):
             return None
         game_state.add_user(username)
 
-    cur.execute('INSERT INTO USERS (NAME, GAME) VALUES (%s, %s)', (username, game_name))
+    cur.execute('INSERT INTO USERS (NAME, SID, GAME) VALUES (%s, %s, %s)', (username, sid, game_name))
 
     cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
 
