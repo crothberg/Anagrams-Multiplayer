@@ -136,6 +136,7 @@ def send_message(args):
     user = args.get('user')
     message = args.get('message')
     room = args.get('room')
+    print_log_line('Message sent in %s' % (room,))
     socketio.emit(
         'message_sent',
         {'user': user, 'message': message},
