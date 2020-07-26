@@ -72,7 +72,7 @@ def user_disc():
     cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game,))
     game_state_str = cur.fetchone()
     if game_state_str is None:
-        print_log_line('Missing game data: %s', % (game,))
+        print_log_line('Missing game data: %s' % (game,))
         return
     game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
     game_state.remove_user(username)
