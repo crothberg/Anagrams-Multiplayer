@@ -1,6 +1,6 @@
 import random
 
-letters = ['abcdefghijklmnopqrstuvwxyz']
+letters = list('abcdefghijklmnopqrstuvwxyz')
 class game_room():
     def __init__(self, host, users=None, middle=[]):
         if users is not None:
@@ -28,7 +28,14 @@ class game_room():
         return {'host' : self.host,
                 'users' : self.active_users,
                 'middle' : self.middle}
-    def flip_tile():
+
+    def letters_alread_flipped(self):
+        return self.middle
+
+    def letters_remaining(self):
+        current_letters = letters.copy()
+
+    def flip_tile(self):
         new_tile = random.choice(letters)
         self.middle.append(new_tile)
         return new_tile
