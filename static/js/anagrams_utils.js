@@ -1,9 +1,9 @@
 function make_player(player_name) {
-    <div class="player">
-        <div class="player-name">player_name</div>
-        <div class="wordlist">
-        </div>
-    </div>
+    var player =
+    `<div class="player">
+        <div class="player-name">`+player_name+`</div>
+        <div class="wordlist">`+make_wordlist()+`</div>
+    </div>`
 }
 
 function make_middle(letters) {

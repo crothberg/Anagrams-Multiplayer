@@ -17,17 +17,20 @@ window.onload = function() {
         $("#player-space").append(make_player(data['username']));
     });
 
-    socket.on('tile_flipped', function(data) {
+    socket.on('game_state_update', function(data) {
         console.log(data);
-        var middle = data['middle'];
         var status = data['status'];
-
+        var users = data['users'];
+        var middle = data['middle'];
+        
         // // Update status
         // var determiner = 'a'
         // if ('erioasfhlx'.includes(letter)) {determiner='an'};
         // $('#status').text(user+' flipped '+determiner+' \''+letter+'\'');
         $('#status').text(status);
-
+        
+        // Update all users simultaneously
+        $("#player-space").html(make_player_spaces(data['users']));
         // Update middle
         $('#middle').html(make_middle(middle));
     });
