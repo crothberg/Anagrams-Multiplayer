@@ -8,7 +8,7 @@ class game_room():
         self.center = center
     
     def add_user(self, user):
-        self.active_users.add(user)
+        self.active_users.append(user)
 
     def has_user(self, username):
         return username in self.active_users
