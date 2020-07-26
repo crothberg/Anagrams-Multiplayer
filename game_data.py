@@ -29,14 +29,19 @@ class game_room():
                 'users' : self.active_users,
                 'middle' : self.middle}
 
-    def letters_alread_flipped(self):
+    def letters_already_flipped(self):
         return self.middle
 
     def letters_remaining(self):
         current_letters = letters.copy()
+        for letter in self.letters_already_flipped:
+            current_letters.remove(letter)
 
     def flip_tile(self):
-        new_tile = random.choice(letters)
+        possibilities = self.letters_remaining()
+        if len(possibilities) == 0:
+            return None
+        new_tile = random.choice(possiblities)
         self.middle.append(new_tile)
         return new_tile
 
