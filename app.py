@@ -118,6 +118,7 @@ def join_game(data):
         game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
         if game_state.has_user(username):
             cur.execute('UPDATE USERS SET SID = %s WHERE NAME = %s', (sid, username))
+            flask_socketio.join_room(game_name)
             print_log_line('%s updating sid to %s' % (username, sid))
             return
         game_state.add_user(username)
