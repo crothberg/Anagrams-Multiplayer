@@ -52,7 +52,7 @@ def get_logs():
     cur = db.cursor()
     cur.execute('SELECT LOG_LINE, TIME FROM LOGS ORDER BY TIME DESC LIMIT 30')
     logs = cur.fetchall()
-    return '\n'.join(['%s: %s' % (log_line[1], log_line[0]) for log_line in logs)
+    return '\n'.join(['%s: %s' % (log_line[1], log_line[0]) for log_line in logs])
 
 @socketio.on('disconnect')
 def user_disc():
