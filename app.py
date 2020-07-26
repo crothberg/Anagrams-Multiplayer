@@ -85,8 +85,9 @@ def user_disc():
     new_state = game_state.generate_game_state()
     update_message = 'User %s has left' % (username,)
     socketio.emit('game_state_update',
-                        {'game_state' : new_state, 'status' : update_message}
-                                            room = game)
+        {'game_state' : new_state, 'status' : update_message},
+        room = game
+    )
 
 @socketio.on('join_game')
 def join_game(data):
