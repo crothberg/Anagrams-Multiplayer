@@ -79,7 +79,7 @@ def user_disc():
     if game_state.num_users() == 0:
         cur.execute('DELETE FROM GAMES WHERE NAME = %s', (game,))
     else:
-        cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
+        cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game))
 
     cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
 
