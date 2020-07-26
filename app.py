@@ -77,7 +77,7 @@ def user_disc():
     game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
     game_state.remove_user(username)
     if game_state.num_users() == 0:
-        cur.execute('DELETE FROM GAMES WHERE NAME IS %s', (game,))
+        cur.execute('DELETE FROM GAMES WHERE NAME = %s', (game,))
     else:
         cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
 
