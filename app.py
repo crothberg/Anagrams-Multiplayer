@@ -184,7 +184,7 @@ def steal_word(args):
     )
 
 @socketio.on('undo')
-def steal_word(args):
+def undo(args):
     room = args.get('room')
 
     game_state = get_game_by_name(room)
