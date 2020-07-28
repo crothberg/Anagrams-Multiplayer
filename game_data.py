@@ -79,7 +79,7 @@ class game_room():
         #Steal from person
         for username, words in self.active_users.items():
             for stealable_word in words:
-                still_needed = list_subtraction(word, stealable_word)
+                still_needed = list_subtraction(list(word), list(stealable_word))
                 if still_needed is None:
                     continue
                 new_middle = list_subtraction(self.middle, still_needed)
