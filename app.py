@@ -183,6 +183,23 @@ def steal_word(args):
         room = room
     )
 
+@socketio.on('undo')
+def steal_word(args):
+    room = args.get('room')
+
+    game_state = get_game_by_name(room)
+    game_state.rollback()
+
+    update_game_state(room, game_state)
+
+    new_state = game_state.generate_game_state()
+    status_msg = 'Undo granted' % (user, word)
+    socketio.emit(
+        'game_state_update',
+        {'status': status_msg, 'game_state' : new_state},
+        room = room
+    )
+
 @socketio.on('send_message')
 def send_message(args):
     user = args.get('user')
