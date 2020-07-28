@@ -1,4 +1,4 @@
-import randoma
+import random
 import app
 
 letters = list( 'A' * 13 + 
