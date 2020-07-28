@@ -180,7 +180,7 @@ def steal_word(args):
     socketio.emit(
         'game_state_update',
         {'status': status_msg, 'game_state' : new_state},
-        room = game
+        room = room
     )
 
 @socketio.on('send_message')
