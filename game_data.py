@@ -35,6 +35,7 @@ class game_room():
             self.active_users = {host : []}
         self.host = host
         self.middle = middle
+        self.prev_source = prev_source
     
     def add_user(self, user):
         self.active_users[user] = []
