@@ -28,7 +28,7 @@ letters = list( 'A' * 13 +
                 'Y' * 3 +
                 'Z' * 2)
 class game_room():
-    def __init__(self, host, users=None, middle=[]):
+    def __init__(self, host, users=None, middle=[], prev_source=None):
         if users is not None:
             self.active_users = users
         else:
@@ -53,7 +53,8 @@ class game_room():
     def generate_game_state(self):
         return {'host' : self.host,
                 'users' : self.active_users,
-                'middle' : self.middle}
+                'middle' : self.middle,
+                'prev_source' : self.prev_source}
 
     def letters_already_flipped(self):
         ret = self.middle.copy()
@@ -81,11 +82,12 @@ class game_room():
         else:
             self.middle = new_middle
             self.active_users[user].append(word)
+            self.prev_source = (word, list(word), dict())
             return True
 
 
 def deserialize_game_room(game_state):
-    return game_room(game_state['host'], game_state['users'], game_state['middle'])
+    return game_room(game_state['host'], game_state['users'], game_state['middle'], game_state['prev_source'])
 
 def list_subtraction(list1, list2):
     ret = list1.copy()
