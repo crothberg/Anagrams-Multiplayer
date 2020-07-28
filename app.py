@@ -75,7 +75,7 @@ def get_game_by_name(game_name):
     game_state_str = cur.fetchone()
     if game_state_str is None:
         return None
-    game_state = game_data.deseiralize_game_room(json.loads(game_state_str[0]))
+    game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
     return game_state
 
 def update_game_state(game_name, game_state):
@@ -145,7 +145,6 @@ def join_game(data):
 
 @socketio.on('flip')
 def flip_tile(args):
-    print_log_line('flip attempt')
     user = args.get('user')
     game = args.get('room')
     cur = db.cursor()
@@ -157,8 +156,10 @@ def flip_tile(args):
     flipped_tile = game_state.flip_tile()
     new_state = game_state.generate_game_state()
     update_game_state(game, game_state)
-    state_update = 'User %s Flipped a %s'  % (user, flipped_tile)
-    print_log_line('%s has flipped a %s in %s' % (user, flipped_tile, game))
+    article = 'an' if flipped_tile in 'ERIOASFHLX' else 'a'
+    state_update = 'User %s flipped %s "%s"'  % (user, article, flipped_tile)
+    print_log_line('%s has flipped %s "%s" in %s' % (user, article, flipped_tile, game))
+
     socketio.emit(
         'game_state_update',
         {'status' : state_update , 'game_state': new_state},
