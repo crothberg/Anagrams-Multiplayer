@@ -69,6 +69,19 @@ def get_logs():
     logs = cur.fetchall()
     return '<br>'.join(['%s: %s' % (log_line[1], log_line[0]) for log_line in logs])
 
+def get_game_by_name(game_name):
+    cur = db.cursor()
+    cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game_name,))
+    game_state_str = cur.fetchone()
+    if game_state_str is None:
+        return None
+    game_state = game_data.deseiralize_game_room(json.loads(game_state_str[0]))
+    return game_state
+
+def update_game_state(game_name, game_state):
+    cur = db.cursor()
+    cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
+
 @socketio.on('disconnect')
 def user_disc():
     sid = request.sid
@@ -81,17 +94,15 @@ def user_disc():
     username = user_data[0]
     game = user_data[1]
     print_log_line('User %s (%s) leaving %s' % (username, sid, game))
-    cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game,))
-    game_state_str = cur.fetchone()
-    if game_state_str is None:
+    game_state = get_game_by_name(game)
+    if game_state is None:
         print_log_line('Missing game data: %s' % (game,))
         return
-    game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
     game_state.remove_user(username)
     if game_state.num_users() == 0:
         cur.execute('DELETE FROM GAMES WHERE NAME = %s', (game,))
     else:
-        cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game))
+        update_game_state(game, game_state)
 
     cur.execute('DELETE FROM USERS WHERE SID = %s', (sid,))
     new_state = game_state.generate_game_state()
@@ -107,15 +118,12 @@ def join_game(data):
     username = data['username']
     game_name = data['game_name']
     cur = db.cursor()
-    cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game_name,))
-    game_state_str = cur.fetchone()
-    game_state = None
-    if game_state_str is None:
+    game_state = get_game_by_name(game_name)
+    if game_state is None:
         ##create the game:
         cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)', (game_name,))
         game_state = game_data.game_room(username)
     else:
-        game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
         if game_state.has_user(username):
             cur.execute('UPDATE USERS SET SID = %s WHERE NAME = %s', (sid, username))
             flask_socketio.join_room(game_name)
@@ -124,7 +132,7 @@ def join_game(data):
         game_state.add_user(username)
 
     print_log_line('user %s (%s) joining game %s' % (username, sid, game_name))
-    cur.execute('INSERT INTO USERS (NAME, SID, GAME) VALUES (%s, %s, %s)', (username, sid, game_name))
+    update_game_state(game_name, game_state)
 
     cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
 
@@ -141,16 +149,14 @@ def flip_tile(args):
     user = args.get('user')
     game = args.get('room')
     cur = db.cursor()
-    cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game,))
-    game_state_str = cur.fetchone()
-    if game_state_str is None:
+    game_state = get_game_by_name(game)
+    if game_state is None:
         print_log_line('user %s attempted to acces missing room %s' % (user, game))
         return
 
-    game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
     flipped_tile = game_state.flip_tile()
     new_state = game_state.generate_game_state()
-    cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(new_state), game))
+    update_game_state(game, game_state)
     state_update = 'User %s Flipped a %s'  % (user, flipped_tile)
     print_log_line('%s has flipped a %s in %s' % (user, flipped_tile, game))
     socketio.emit(
@@ -163,6 +169,7 @@ def flip_tile(args):
 def steal_word(args):
     user = args.get('user')
     word = args.get('word')
+    room = args.get('room')
     source, updated_boards = None, None #steal_word()
     socketio.emit(
         'word_stolen',
