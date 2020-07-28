@@ -1,8 +1,5 @@
 import random
 
-<<<<<<< HEAD
-letters = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-=======
 letters = list( 'a' * 13 + 
                 'b' * 3 +
                 'c' * 3 +
@@ -29,7 +26,6 @@ letters = list( 'a' * 13 +
                 'x' * 2 +
                 'y' * 3 +
                 'z' * 2)
->>>>>>> 7686c24db2af70df88645590c43dfa43d1ba2b28
 class game_room():
     def __init__(self, host, users=None, middle=[]):
         if users is not None:
