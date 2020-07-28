@@ -36,7 +36,7 @@ class game_room():
         self.middle = middle
     
     def add_user(self, user):
-        self.active_users.append({user : []})
+        self.active_users[user] = dict()
 
     def has_user(self, username):
         return username in self.active_users.keys()
