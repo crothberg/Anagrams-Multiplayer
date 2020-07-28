@@ -42,7 +42,7 @@ class game_room():
         return username in self.active_users.keys()
 
     def remove_user(self, removing):
-        self.active_users = {username : data for (username, data) in self.active_users.items() if username != removing]
+        self.active_users = {username : data for (username, data) in self.active_users.items() if username != removing}
         if removing == self.host and self.num_users() > 0:
             self.host = list(self.active_users)[0]
     
