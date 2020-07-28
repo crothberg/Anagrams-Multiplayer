@@ -39,8 +39,6 @@ def destroy_db():
     cur.execute('DROP TABLE GAMES')
     cur.execute('DROP TABLE LOGS')
 
-setup_db()
-
 @app.route('/')
 def hello():
     return render_template('index.html')
@@ -196,5 +194,6 @@ def print_log_line(log_line):
     cur.execute('INSERT INTO LOGS (LOG_LINE, TIME) VALUES (%s, NOW())', (log_line,))
 
 if __name__ == '__main__':
+    setup_db()
     socketio.run(app)
     #app.run(debug=True)

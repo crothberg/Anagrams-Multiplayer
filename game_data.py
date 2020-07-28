@@ -1,4 +1,5 @@
-import random
+import randoma
+import app
 
 letters = list( 'A' * 13 + 
                 'B' * 3 +
@@ -92,4 +93,5 @@ def list_subtraction(list1, list2):
         try:
             ret.remove(letter)
         except ValueError:
+        app.print_log_line('subtraction failed: "%s" from "%s"' % (list1.join(','), list2.join(',')))
             return None
