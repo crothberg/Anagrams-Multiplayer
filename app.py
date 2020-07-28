@@ -137,7 +137,6 @@ def join_game(data):
 
 @socketio.on('flip')
 def flip_tile(args):
-    print_log_line('flip attempt')
     user = args.get('user')
     game = args.get('room')
     cur = db.cursor()
@@ -151,8 +150,9 @@ def flip_tile(args):
     flipped_tile = game_state.flip_tile()
     new_state = game_state.generate_game_state()
     cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(new_state), game))
-    state_update = 'User %s Flipped a %s'  % (user, flipped_tile)
-    print_log_line('%s has flipped a %s in %s' % (user, flipped_tile, game))
+    article = 'an' if flipped_tile in 'ERIOASFHLX' else 'a'
+    state_update = 'User %s flipped %s "%s"'  % (user, article, flipped_tile)
+    print_log_line('%s has flipped %s "%s" in %s' % (user, article, flipped_tile, game))
     socketio.emit(
         'game_state_update',
         {'status' : state_update , 'game_state': new_state},
