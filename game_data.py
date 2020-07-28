@@ -76,7 +76,7 @@ class game_room():
     def steal_word(self, user, word):
         #Steal from middle
         new_middle = list_subtraction(self.middle, list(word))
-        if new_middle is None:
+        if len(word) >= 3 and new_middle is None:
             return False
         else:
             self.middle = new_middle
