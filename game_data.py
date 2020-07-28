@@ -83,8 +83,13 @@ class game_room():
         else:
             self.middle = new_middle
             self.active_users[user].append(word)
-            self.prev_source = (word, list(word), dict())
+            self.prev_source = (user, word, list(word), dict())
             return True
+
+    def rollback(self):
+        self.middle = self.middle + self.prev_source[2]
+        self.active_users[self.prev_source[0]].remove(self.prev_source[1])
+        self.prev_source = None
 
 
 def deserialize_game_room(game_state):
