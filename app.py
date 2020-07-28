@@ -193,7 +193,7 @@ def undo(args):
     update_game_state(room, game_state)
 
     new_state = game_state.generate_game_state()
-    status_msg = 'Undo granted' % (user, word)
+    status_msg = 'Undo granted'
     socketio.emit(
         'game_state_update',
         {'status': status_msg, 'game_state' : new_state},
