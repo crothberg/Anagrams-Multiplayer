@@ -76,6 +76,21 @@ class game_room():
         return new_tile
 
     def steal_word(self, user, word):
+        #Steal from person
+        for username, words in self.active_users.items():
+            for stealable_word in words:
+                still_needed = list_subtraction(word, stealable_word)
+                if still_needed is None:
+                    continue
+                new_middle = list_subtraction(self.middle, still_needed)
+                if new_middle is None:
+                    continue
+                self.middle = new_middle
+                self.active_users[user].append(word)
+                self.active_users[username].remove(stealable_word)
+                self.prev_source = (user, word, list(still_needed), {username : stealable_word})
+                return True
+
         #Steal from middle
         new_middle = list_subtraction(self.middle, list(word))
         if len(word) < 3 or new_middle is None:
