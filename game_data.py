@@ -62,7 +62,7 @@ class game_room():
         return ret
 
     def letters_remaining(self):
-        return list_subtraction(letters, self.letters_alread_flipped())
+        return list_subtraction(letters, self.letters_already_flipped())
 
     def flip_tile(self):
         possibilities = self.letters_remaining()
