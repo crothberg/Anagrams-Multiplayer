@@ -75,7 +75,7 @@ def get_game_by_name(game_name):
     game_state_str = cur.fetchone()
     if game_state_str is None:
         return None
-    game_state = game_data.deseiralize_game_room(json.loads(game_state_str[0]))
+    game_state = game_data.deserialize_game_room(json.loads(game_state_str[0]))
     return game_state
 
 def update_game_state(game_name, game_state):
