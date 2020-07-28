@@ -86,7 +86,7 @@ class game_room():
 def deserialize_game_room(game_state):
     return game_room(game_state['host'], game_state['users'], game_state['middle'])
 
-def list_subtraction(list1 list2):
+def list_subtraction(list1, list2):
     ret = list1.copy()
     for letter in list2:
         try:
