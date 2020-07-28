@@ -104,6 +104,8 @@ class game_room():
     def rollback(self):
         self.middle = self.middle + self.prev_source[2]
         self.active_users[self.prev_source[0]].remove(self.prev_source[1])
+        for username, word in self.prev_source[3].items():
+            self.active_users[username].append(word)
         self.prev_source = None
 
 
