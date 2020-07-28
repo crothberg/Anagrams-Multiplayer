@@ -31,7 +31,7 @@ class game_room():
         if users is not None:
             self.active_users = users
         else:
-            self.active_users = [{host : []}]
+            self.active_users = {host : []}
         self.host = host
         self.middle = middle
     
