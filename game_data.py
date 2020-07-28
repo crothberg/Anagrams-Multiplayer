@@ -31,20 +31,20 @@ class game_room():
         if users is not None:
             self.active_users = users
         else:
-            self.active_users = [host]
+            self.active_users = [{host : []}]
         self.host = host
         self.middle = middle
     
     def add_user(self, user):
-        self.active_users.append(user)
+        self.active_users.append({user : []})
 
     def has_user(self, username):
-        return username in self.active_users
+        return username in self.active_users.keys()
 
     def remove_user(self, removing):
-        self.active_users = [user for user in self.active_users if user != removing]
+        self.active_users = [user for user in self.active_users.items() if user[0] != removing]
         if removing == self.host and self.num_users() > 0:
-            self.host = self.active_users[0]
+            self.host = list(self.active_users)[0]
     
     def num_users(self):
         return len(self.active_users)
@@ -55,13 +55,14 @@ class game_room():
                 'middle' : self.middle}
 
     def letters_already_flipped(self):
-        return self.middle
+        ret = self.middle.copy()
+        for user in self.active_users.items():
+            for word in user[1]:
+                ret = ret + list(word)
+        return ret
 
     def letters_remaining(self):
-        current_letters = letters.copy()
-        for letter in self.letters_already_flipped():
-            current_letters.remove(letter)
-        return current_letters
+        return list_subtraction(letters, self.letters_alread_flipped())
 
     def flip_tile(self):
         possibilities = self.letters_remaining()
@@ -71,6 +72,24 @@ class game_room():
         self.middle.append(new_tile)
         return new_tile
 
+    def steal_word(self, user, word):
+        #Steal from middle
+        new_middle = list_subtraction(self.middle, list(word))
+        if new_middle is None:
+            return False
+        else:
+            self.middle = new_middle
+            self.active_users[user].append(word)
+            return True
+
 
 def deserialize_game_room(game_state):
     return game_room(game_state['host'], game_state['users'], game_state['middle'])
+
+def list_subtraction(list1 list2):
+    ret = list1.copy()
+    for letter in list2:
+        try:
+            ret.remove(letter)
+        except ValueError:
+            return None

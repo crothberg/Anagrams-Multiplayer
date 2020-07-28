@@ -171,6 +171,8 @@ def steal_word(args):
     word = args.get('word')
     room = args.get('room')
     source, updated_boards = None, None #steal_word()
+    game_state = get_game_by_name(room)
+    game_state.steal_word(user, word)
     socketio.emit(
         'word_stolen',
         {'user': user, 'word': word, 'source': source, 'updated_boards': updated_boards}
