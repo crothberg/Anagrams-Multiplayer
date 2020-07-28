@@ -10,7 +10,7 @@ function make_middle(letters) {
     console.log(typeof letters)
     var middle = '';
     letters.forEach(letter =>
-        middle += '<span class="tile">'+letter+'</span>'
+        middle += '<div class="tile"><span class="letter">'+letter+'</span></div>'
     );
     return middle;
 }

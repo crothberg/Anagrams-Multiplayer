@@ -57,7 +57,7 @@ window.onload = function() {
         } else {
             // If a word has been entered, try to steal it
             console.log('A word has been stolen!');
-            socket.emit('steal', {'user': username, 'word': word});
+            socket.emit('steal', {'user': username, 'room': game_name, 'word': word});
         }
         // Clear input
         $("#flip-action-text").val('');

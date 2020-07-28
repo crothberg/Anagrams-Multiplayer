@@ -1,6 +1,6 @@
 import random
 
-letters = list('abcdefghijklmnopqrstuvwxyz')
+letters = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 class game_room():
     def __init__(self, host, users=None, middle=[]):
         if users is not None:
