@@ -229,6 +229,34 @@ def challenge(args):
         {'status': status_msg},
         room = room)
 
+def finish_challenge(game_state, room):
+    challenge_result = game_state.finish_challenge()
+    new_state = game_state.generate_game_state()
+    update_game_state(room, game_state)
+    status_msg = ''
+    if challenge_result == True:
+        status_msg = 'The challenge has succeeded'
+    else:
+        status_msg = 'The challenge has failed'
+    socketio.emit(
+            'game_state_update',
+            {'status' : status_msg, game_state : game_state},
+            room = room)
+
+@socketio.on('vote'):
+def vote(args):
+    room = args.get('room')
+    user = args.get('user')
+    vote = args.get('vote')
+
+    game_state = get_game_by_name(room)
+    game_state.set_vote(user, vote)
+
+    if game_state.all_votes_in():
+        finish_challenge(game_state, room)
+    else:
+        update_game_state(room, game_state)
+
 def print_log_line(log_line):
     cur = db.cursor()
     cur.execute('INSERT INTO LOGS (LOG_LINE, TIME) VALUES (%s, NOW())', (log_line,))

@@ -117,6 +117,31 @@ class game_room():
         votes = {username : 0 for username in self.active_users}
         self.challenge = (start_time, votes)
 
+    def set_vote(self, user, vote):
+        if self.challenge is None:
+            return
+        vote_score = 0
+        if vote = 'accept'
+            vote_score = 1
+        else:
+            vote_score = -1
+        self.challenge[1][user] = vote_score
+
+    def all_votes_in(self):
+        if self.challenge is None:
+            return False
+        votes_needed = [vote for uname, vote in self.challenge.items() if vote == 0]
+        return len(votes_needed) < 1
+
+    def finish_challenge(self):
+        all_votes = [vote for uname, vote in self.challenge.items()]
+        self.challenge = None
+        if sum(all_votes) > 0:
+            self.rollback()
+            return True
+        else:
+            return False
+
     def rollback(self):
         last_op = self.last_op()
         if last_op is None:
