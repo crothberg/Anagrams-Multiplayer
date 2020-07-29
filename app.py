@@ -218,8 +218,10 @@ def challenge(args):
     user = args.get('user')
 
     game_state = get_game_by_name(room)
-    game_state.create_challenge()
     challenging = game_state.last_op()
+    if challenging is None:
+        return
+    game_state.create_challenge()
     update_game_state(room, game_state)
     status_msg = '%s is challenging %s\'s word: %s' % (user, challenging[0], challenging[1])
     socketio.emit(
