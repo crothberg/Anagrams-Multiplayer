@@ -121,7 +121,7 @@ class game_room():
         if self.challenge is None:
             return
         vote_score = 0
-        if vote == 'accept'
+        if vote == 'accept':
             vote_score = 1
         else:
             vote_score = -1
