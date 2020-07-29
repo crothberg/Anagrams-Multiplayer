@@ -122,9 +122,9 @@ class game_room():
             return
         vote_score = 0
         if vote == 'accept':
-            vote_score = 1
-        else:
             vote_score = -1
+        else:
+            vote_score = 1
         self.challenge[1][user] = vote_score
 
     def all_votes_in(self):
