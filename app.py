@@ -243,7 +243,7 @@ def finish_challenge(game_state, room):
             {'status' : status_msg, 'game_state' : game_state},
             room = room)
 
-@socketio.on('vote'):
+@socketio.on('vote')
 def vote(args):
     room = args.get('room')
     user = args.get('user')
