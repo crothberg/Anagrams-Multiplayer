@@ -1,6 +1,6 @@
 import random
 import app
-import datetime
+import time
 
 letters = list( 'A' * 13 + 
                 'B' * 3 +
@@ -113,7 +113,7 @@ class game_room():
     def create_challenge(self):
         if self.challenge is not None or self.last_op() is None:
             return
-        start_time = datetime.strptime(datetime.datetime.now())
+        start_time = time.clock_gettime(time.CLOCK_MONOTONIC_RAW)
         votes = {username : 0 for username in self.active_users}
         self.challenge = (start_time, votes)
 
