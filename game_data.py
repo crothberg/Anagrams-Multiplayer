@@ -28,7 +28,7 @@ letters = list( 'A' * 13 +
                 'Y' * 3 +
                 'Z' * 2)
 class game_room():
-    def __init__(self, host, users=None, middle=[], prev_source=None):
+    def __init__(self, host, users=None, middle=[], prev_source=[]):
         if users is not None:
             self.active_users = users
         else:
@@ -88,7 +88,7 @@ class game_room():
                 self.middle = new_middle
                 self.active_users[user].append(word)
                 self.active_users[username].remove(stealable_word)
-                self.prev_source = (user, word, list(still_needed), {username : stealable_word})
+                self.prev_source.append((user, word, list(still_needed), {username : stealable_word}))
                 return True
 
         #Steal from middle
@@ -98,17 +98,18 @@ class game_room():
         else:
             self.middle = new_middle
             self.active_users[user].append(word)
-            self.prev_source = (user, word, list(word), dict())
+            self.prev_source.append((user, word, list(word), dict()))
             return True
 
     def rollback(self):
-        if self.prev_source is None:
+        if self.prev_source is []:
             return
-        self.middle = self.middle + self.prev_source[2]
-        self.active_users[self.prev_source[0]].remove(self.prev_source[1])
-        for username, word in self.prev_source[3].items():
+        last_op = self.prev_source[-1]
+        self.middle = self.middle + last_op[2]
+        self.active_users[last_op[0]].remove(last_op[1])
+        for username, word in self.last_op[3].items():
             self.active_users[username].append(word)
-        self.prev_source = None
+        self.prev_source = self.prev_source[:-1]
 
 
 def deserialize_game_room(game_state):
