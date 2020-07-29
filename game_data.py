@@ -134,7 +134,7 @@ class game_room():
         return len(votes_needed) < 1
 
     def finish_challenge(self):
-        all_votes = [vote for uname, vote in self.challenge.items()]
+        all_votes = [vote for uname, vote in self.challenge[1].items()]
         self.challenge = None
         if sum(all_votes) > 0:
             self.rollback()
