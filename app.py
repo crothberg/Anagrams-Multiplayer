@@ -240,7 +240,7 @@ def finish_challenge(game_state, room):
         status_msg = 'The challenge has failed'
     socketio.emit(
             'game_state_update',
-            {'status' : status_msg, 'game_state' : game_state},
+            {'status' : status_msg, 'game_state' : new_state},
             room = room)
 
 @socketio.on('vote')
