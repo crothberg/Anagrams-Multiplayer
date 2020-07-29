@@ -1,5 +1,6 @@
 import random
 import app
+from datetime import datetime
 
 letters = list( 'A' * 13 + 
                 'B' * 3 +
@@ -28,7 +29,7 @@ letters = list( 'A' * 13 +
                 'Y' * 3 +
                 'Z' * 2)
 class game_room():
-    def __init__(self, host, users=None, middle=[], prev_source=[]):
+    def __init__(self, host, users=None, middle=[], prev_source=[], challenge = None):
         if users is not None:
             self.active_users = users
         else:
@@ -36,6 +37,7 @@ class game_room():
         self.host = host
         self.middle = middle
         self.prev_source = prev_source
+        self.challenge = challenge
     
     def add_user(self, user):
         self.active_users[user] = []
@@ -55,7 +57,8 @@ class game_room():
         return {'host' : self.host,
                 'users' : self.active_users,
                 'middle' : self.middle,
-                'prev_source' : self.prev_source}
+                'prev_source' : self.prev_source,
+                'challenge' : self.challenge}
 
     def letters_already_flipped(self):
         ret = self.middle.copy()
@@ -101,10 +104,23 @@ class game_room():
             self.prev_source.append((user, word, list(word), dict()))
             return True
 
-    def rollback(self):
+    def last_op(self):
         if len(self.prev_source) < 1:
+            return None
+        else:
+            return self.prev_source[-1]
+
+    def create_challenge(self):
+        if self.challenge is not None or self.last_op() is None:
             return
-        last_op = self.prev_source[-1]
+        start_time = datetime.now()
+        votes = {username : 0 for username in self.active_users}
+        self.challenge = (start_time, votes)
+
+    def rollback(self):
+        last_op = self.last_op()
+        if last_op is None:
+            return
         self.middle = self.middle + last_op[2]
         self.active_users[last_op[0]].remove(last_op[1])
         for username, word in last_op[3].items():
@@ -113,7 +129,7 @@ class game_room():
 
 
 def deserialize_game_room(game_state):
-    return game_room(game_state['host'], game_state['users'], game_state['middle'], game_state['prev_source'])
+    return game_room(game_state['host'], game_state['users'], game_state['middle'], game_state['prev_source'], game_state['challenge'])
 
 def list_subtraction(list1, list2):
     ret = list1.copy()

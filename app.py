@@ -212,6 +212,21 @@ def send_message(args):
         room = room
     )
 
+@socketio.on('challenge')
+def challenge(args):
+    room = args.get('room')
+    user = args.get('user')
+
+    game_state = get_game_by_name(room)
+    game_state.create_challenge()
+    challenging = game_state.last_op()
+    update_game_state(room, game_state)
+    status_msg = '%s is challenging %s\'s word: %s' % (user, challenging[0], challenging[1])
+    socketio.emit(
+        'challenge',
+        {'status': status_msg},
+        room = room)
+
 def print_log_line(log_line):
     cur = db.cursor()
     cur.execute('INSERT INTO LOGS (LOG_LINE, TIME) VALUES (%s, NOW())', (log_line,))
