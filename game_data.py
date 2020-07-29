@@ -107,7 +107,7 @@ class game_room():
         last_op = self.prev_source[-1]
         self.middle = self.middle + last_op[2]
         self.active_users[last_op[0]].remove(last_op[1])
-        for username, word in self.last_op[3].items():
+        for username, word in last_op[3].items():
             self.active_users[username].append(word)
         self.prev_source = self.prev_source[:-1]
 
