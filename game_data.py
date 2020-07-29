@@ -102,7 +102,7 @@ class game_room():
             return True
 
     def rollback(self):
-        if self.prev_source is []:
+        if len(self.prev_source) < 1:
             return
         last_op = self.prev_source[-1]
         self.middle = self.middle + last_op[2]
