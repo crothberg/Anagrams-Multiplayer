@@ -117,14 +117,15 @@ def join_game(data):
     game_name = data['game_name']
     cur = db.cursor()
     game_state = get_game_by_name(game_name)
+    cur.execute('DELETE FROM USERS WHERE NAME = %s', (username,))
+    cur.execute('INSERT INTO USERS (NAME, SID, GAME) VALUES (%s, %s, %s)', (username, sid, game_name))
+    flask_socketio.join_room(game_name)
     if game_state is None:
         ##create the game:
         cur.execute('INSERT INTO GAMES (NAME) VALUES (%s)', (game_name,))
         game_state = game_data.game_room(username)
     else:
         if game_state.has_user(username):
-            cur.execute('UPDATE USERS SET SID = %s WHERE NAME = %s', (sid, username))
-            flask_socketio.join_room(game_name)
             print_log_line('%s updating sid to %s' % (username, sid))
             return
         game_state.add_user(username)
@@ -134,7 +135,6 @@ def join_game(data):
 
     cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
 
-    flask_socketio.join_room(game_name)
     new_state = game_state.generate_game_state()
     update_message = 'User %s has joined' % (username,)
     socketio.emit('game_state_update',
