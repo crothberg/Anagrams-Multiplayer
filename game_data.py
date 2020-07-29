@@ -89,8 +89,12 @@ class game_room():
                 if new_middle is None:
                     continue
                 self.middle = new_middle
-                self.active_users[user].append(word)
-                self.active_users[username].remove(stealable_word)
+                if username == user:
+                    overwrite_index = self.active_users[username].index(stealable_word)
+                    self.active_users[username][overwrite_index] = word
+                else:
+                    self.active_users[user].append(word)
+                    self.active_users[username].remove(stealable_word)
                 self.prev_source.append((user, word, list(still_needed), {username : stealable_word}))
                 return True
 
