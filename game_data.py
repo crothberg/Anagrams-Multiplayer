@@ -130,7 +130,7 @@ class game_room():
     def all_votes_in(self):
         if self.challenge is None:
             return False
-        votes_needed = [vote for uname, vote in self.challenge.items() if vote == 0]
+        votes_needed = [vote for uname, vote in self.challenge[1].items() if vote == 0]
         return len(votes_needed) < 1
 
     def finish_challenge(self):
