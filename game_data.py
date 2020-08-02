@@ -185,3 +185,4 @@ def list_subtraction(list1, list2):
 def user_sort(u1, u2):
     print_log_line('u1 = "' + str(u1) + '"')
     print_log_line('u2 = "' + str(u2) + '"')
+    return 1
