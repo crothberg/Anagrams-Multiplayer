@@ -57,15 +57,14 @@ button {
     background: var(--lightest);
     display: flex;
     flex-direction: column;
-    /* border-bottom: .5px solid lightgray; */
     box-shadow: 0px 1px 5px rgba(0, 0, 0, .3);
 }
 #status {
-    margin: 0px;
+    margin-top: 5px;
+    margin-bottom: 15px;
 }
 #letters-remaining {
-    margin-top: 15px;
-    margin-bottom: 10px;
+    flex: 1;
 }
 #leave-game {
     position: absolute;
@@ -99,7 +98,7 @@ button {
     border-radius: 3px;
 }
 #flip-action-div {
-    flex: 3;
+    flex: 1;
     height: 30%;
     display: flex;
 }
@@ -110,7 +109,7 @@ button {
 }
 #middle {
     background: var(--light);
-    flex: 1;
+    flex: 2;
     padding: 10px;
     min-height: 20%;
     width: 50%;
@@ -123,8 +122,7 @@ button {
     flex-flow: row wrap;
 }
 #challenge-button-div {
-    flex: 3;
-    height: 30%;
+    flex: 2;
     display: flex;
 }
 #challenge {

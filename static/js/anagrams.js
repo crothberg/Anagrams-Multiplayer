@@ -99,6 +99,7 @@ window.onload = function() {
         socket.emit('vote', {'room': game_name, 'user': username, 'vote': 'accept'});
         $("#modal-background").hide('fade', 'slow');
         $("#challenge-modal").hide('drop', {direction: 'up'}, 'slow');
+        $("#flip-action-text").focus();
         console.log('Voted accept.')
     });
 
@@ -106,6 +107,7 @@ window.onload = function() {
         socket.emit('vote', {'room': game_name, 'user': username, 'vote': 'reject'});
         $("#modal-background").hide('fade', 'slow');
         $("#challenge-modal").hide('drop', {direction: 'up'}, 'slow');
+        $("#flip-action-text").focus();
         console.log('Voted reject.')
     });
 

@@ -193,7 +193,7 @@ def steal_word(args):
     new_state = game_state.generate_game_state()
     status_msg = '%s stole the word "%s"' % (user, word)
     if steal_result == False:
-        status_msg = '%s Tried to steal %s' % (user, word)
+        status_msg = '%s tried to steal the word "%s"' % (user, word)
 
     socketio.emit(
         'game_state_update',
