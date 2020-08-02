@@ -17,6 +17,7 @@ db = psycopg2.connect(DATABASE_URL, sslmode='allow')
 db.autocommit = True
 
 def setup_db():
+    print_log_line('running setup_db')
     cur = db.cursor()
     try:
         cur.execute('CREATE TABLE USERS (                   \
@@ -26,10 +27,11 @@ def setup_db():
         cur.execute('CREATE TABLE GAMES (                   \
                         NAME TEXT               NOT NULL,   \
                         STATE TEXT )')
-        cur.execute('CREATE TABLE LOGS  (                   \
-                        LOG_LINE TEXT           NOT NULL,   \
-                        TIME TIMESTAMP          NOT NULL)')
+        #cur.execute('CREATE TABLE LOGS  (                   \
+        #                LOG_LINE TEXT           NOT NULL,   \
+        #                TIME TIMESTAMP          NOT NULL)')
     except Exception:
+        print_log_line('exception')
         destroy_db()
         setup_db()
 
@@ -37,7 +39,7 @@ def destroy_db():
     cur = db.cursor()
     cur.execute('DROP TABLE USERS')
     cur.execute('DROP TABLE GAMES')
-    cur.execute('DROP TABLE LOGS')
+    #cur.execute('DROP TABLE LOGS')
 
 @app.route('/')
 def hello():
