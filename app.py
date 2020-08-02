@@ -21,7 +21,7 @@ def setup_db():
     try:
         cur.execute('CREATE TABLE USERS (                   \
                         NAME    TEXT            NOT NULL,   \
-                        SID     TEXT            NOT NULL,   \
+                        SID     TEXT                    ,   \
                         GAME    TEXT                    )')
         cur.execute('CREATE TABLE GAMES (                   \
                         NAME TEXT               NOT NULL,   \
