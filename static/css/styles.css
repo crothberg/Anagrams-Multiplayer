@@ -61,7 +61,11 @@ button {
     box-shadow: 0px 1px 5px rgba(0, 0, 0, .3);
 }
 #status {
-    margin: 5px;
+    margin: 0px;
+}
+#letters-remaining {
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 #leave-game {
     position: absolute;

@@ -33,7 +33,7 @@ window.onload = function() {
         $('#status').text(status);
         
         // Update middle
-        $('#middle').html(make_middle(middle));
+        $('#middle').html(make_middle(middle, letters_remaining));
         
         // Update all users simultaneously
         $("#player-space").html(make_all_players(users, scores));
@@ -43,12 +43,6 @@ window.onload = function() {
         // if (letters_remaining == 0) {
         //     game_over()
         // }
-    });
-
-    socket.on('game_over', function(data) {
-        var status = data['status'];
-        $('#status').text(status);
-        // ;
     });
 
     $("#flip-action").focus();

@@ -8,8 +8,7 @@ function make_player(player_name, score, words) {
     return player
 }
 
-function make_middle(letters) {
-    console.log(typeof letters)
+function make_middle(letters, letters_remaining) {
     var middle = '';
     letters.forEach(function(letter) {
         tilt = Math.floor(Math.random() * 17 ) - 8;
@@ -19,6 +18,7 @@ function make_middle(letters) {
             <span class="tile-letter-overlay">`+letter+`</span>
         </span>`;
     });
+    $('#letters-remaining').text(letters_remaining+' Letters Remaining')
     return middle;
 }
 
