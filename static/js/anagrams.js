@@ -109,4 +109,18 @@ window.onload = function() {
         console.log('Voted reject.')
     });
 
+    $("#share-game").click(function() {
+        var copyText = document.getElementById("current-url");
+        copyText.type = 'text';
+        copyText.value = window.location.href;
+        copyText.select();
+        document.execCommand("copy");
+        copyText.type = 'hidden';
+        alert('URL copied to clipboard!')
+    });
+
+    $("#leave-game").click(function() {
+        window.location.href = '/';
+    })
+
 }
