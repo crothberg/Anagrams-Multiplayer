@@ -291,6 +291,7 @@ def print_log_line(log_line):
     cur = db.cursor()
     cur.execute('INSERT INTO LOGS (LOG_LINE, TIME) VALUES (%s, NOW())', (log_line,))
 
+print_log_line('__name__ = %s' % (__name__,))
 if __name__ == '__main__':
     setup_db()
     socketio.run(app)
