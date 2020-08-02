@@ -86,7 +86,7 @@ def user_disc():
     cur = db.cursor()
     cur.execute('SELECT NAME, GAME FROM USERS WHERE SID = %s', (sid,))
     user_data = cur.fetchone()
-    if username is None:
+    if user_data is None:
         return
     username, game = user_data
     cur.execute('UPDATE USERS SET SID = NULL WHERE SID = %s', (sid,))
