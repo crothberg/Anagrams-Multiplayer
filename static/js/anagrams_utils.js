@@ -45,15 +45,17 @@ function make_wordlist(words) {
 
 function make_all_players(user_list, user_scores, username) {
     $('.player-space').html('');
+    console.log('UNORDERED:', user_list);
     var ordered_players = {};
-    Object.keys(user_list).sort(function(p1, p2) {
-        return (p1 == 'Carmi')? 1 : 0
-    }).forEach(function(key) {
+    var sorted_usernames = Object.keys(user_list).sort(function(p1) {
+        return (p1 == username)? -1 : 1;
+    })
+    sorted_usernames.forEach(function(key) {
         ordered_players[key] = user_list[key];
     });
+    console.log('ORDERED:', ordered_players);
     for (const [idx, [player_name, player_words]] of Object.entries(Object.entries(ordered_players))) {
         var score = user_scores[player_name]
-        console.log('HERE', idx, player_name, score, player_words);
         var player = make_player(player_name, score, player_words);
         if (idx % 2 == 0) {
             $('#player-space-left').append(player);
