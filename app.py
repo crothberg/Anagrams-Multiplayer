@@ -90,7 +90,7 @@ def user_disc():
         return
     username, game = user_data
     cur.execute('UPDATE USERS SET SID = NULL WHERE SID = %s', (sid,))
-    cur.execute('SELECT NAME FROM USERS WHERE GAME = %s and SID IS NOT NULL')
+    cur.execute('SELECT NAME FROM USERS WHERE GAME = %s AND SID IS NOT NULL', (game,))
     if cur.fetchone() is None:
         cur.execute('DELETE FROM GAMES WHERE NAME = %s', (game,))
 
