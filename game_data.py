@@ -1,6 +1,7 @@
 import random
 import app
 import time
+import collections
 
 letters = list( 'A' * 13 + 
                 'B' * 3 +
@@ -82,6 +83,8 @@ class game_room():
 
     def steal_word(self, user, word):
         #Steal from person
+        stealing_dict = collections.OrderedDict(self.active_users)
+        stealing_dict = sorted(stealing_dict, key=user_sort)
         for username, words in self.active_users.items():
             for stealable_word in words:
                 still_needed = list_subtraction(list(word), list(stealable_word))
@@ -178,3 +181,7 @@ def list_subtraction(list1, list2):
             #app.print_log_line('subtraction failed: "%s" from "%s"' % (list1.join(','), list2.join(',')))
             return None
     return ret
+
+def user_sort(u1, u2):
+    print_log_line('u1 = "' + str(u1) + '"')
+    print_log_line('u2 = "' + str(u2) + '"')
