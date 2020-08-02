@@ -90,7 +90,7 @@ class game_room():
                     continue
                 stealing_dict_inner = copy.deepcopy(stealing_dict)
                 stealing_dict_inner[username].remove(stealable_word)
-                result = multi_word_recurse(user, still_needed, stealing_dict_inner, depth + 1)
+                result = self.multi_word_recurse(user, still_needed, stealing_dict_inner, depth + 1)
                 if result is not None:
                     result.append((username, stealable_word))
                     return result
