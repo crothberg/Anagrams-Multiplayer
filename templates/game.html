@@ -1,30 +1,40 @@
 <head>
     <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
     <script src="{{ url_for('static', filename='js/js.cookie.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/anagrams_utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/anagrams.js') }}"></script>
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <title>Anagrams [{{ game_name }}]</title>
 </head>
 
 <body>
     <div id="header-bar">
-        <h1 id="game-title">Anagrams Game: {{ game_name }}</h1>
+        <h1 id="game-title">Anagrams</h1>
+        <button id="leave-game">Leave Game</button>
+        <button id="share-game">Copy Game Link</button>
         <p id="status">To flip a tile, press enter. To steal a word, type it.</p>
+        <h3>1. Can't steal a word from the middle if I already have it. 2. You can steal a word without adding a letter. 3. Refreshing makes you lose all your words. 4. What happens when we're out of letters?</h3>
     </div>
     <div id="main">
         <div id="board">
-            <div id="action-bar">
+            <div class="player-space" id="player-space-left">
+            </div>
+            <div id="action-area">
                 <div id="flip-action-div">
                     <form id="flip-action">
                         <input type="text" id="flip-action-text" name="flip-action-text" autofocus>
                     </form>
                 </div>
                 <div id="middle">Middle</div>
-                <div id="undo-button-div">3</div>
+                <div id="challenge-button-div">
+                    <button id="challenge">Challenge</button>
+                </div>
             </div>
-            <div id="player-space">
+            <div class="player-space" id="player-space-right">
             </div>
         </div>
         <div id="chatbar">
@@ -37,5 +47,13 @@
                 </form>
             </div>
         </div>
+    </div>
+
+    <div id="modal-background"></div>
+    <div class="modal" id="challenge-modal">
+        <h1 id="challenge-status"></h1>
+        <h3>How do you vote?</h3>
+        <p id='vote-yes'>It's a word</p>
+        <p id='vote-no'>It's not a word</p>
     </div>
 </body>
