@@ -17,7 +17,6 @@ db = psycopg2.connect(DATABASE_URL, sslmode='allow')
 db.autocommit = True
 
 def setup_db():
-    destroy_db()
     cur = db.cursor()
     try:
         cur.execute('CREATE TABLE USERS (                   \
