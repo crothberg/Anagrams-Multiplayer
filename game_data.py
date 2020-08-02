@@ -96,7 +96,6 @@ class game_room():
                     self.active_users[user].append(word)
                     self.active_users[username].remove(stealable_word)
                 ##Sort words
-                self.active_users[user] = sorted(self.active_users[user], key=len)
                 self.prev_source.append((user, word, list(still_needed), {username : stealable_word}))
                 return True
 
@@ -108,7 +107,6 @@ class game_room():
             self.middle = new_middle
             self.active_users[user].append(word)
             self.prev_source.append((user, word, list(word), dict()))
-            self.active_users[user] = sorted(self.active_users[user], key=len)
             return True
 
     def last_op(self):
