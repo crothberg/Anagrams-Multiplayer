@@ -1,4 +1,6 @@
+import os
 import psycopg2
+
 DATABASE_URL = os.environ['DATABASE_URL']
 db = psycopg2.connect(DATABASE_URL, sslmode='allow')
 db.autocommit = True
