@@ -183,5 +183,5 @@ def list_subtraction(list1, list2):
     return ret
 
 def user_val(u):
-    print_log_line('u1 = "' + str(u) + '"')
+    app.print_log_line('u1 = "' + str(u) + '"')
     return 1
