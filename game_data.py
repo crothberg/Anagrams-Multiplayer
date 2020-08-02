@@ -117,8 +117,8 @@ class game_room():
             still_needed = multi_result[0]
             words_stolen = multi_result[1:]
             self.active_users[user].append(word)
-            for username, word in words_stolen:
-                self.active_users[username].remove(word)
+            for username, word_stolen in words_stolen:
+                self.active_users[username].remove(word_stolen)
             self.prev_source.append((user, word, still_needed, dict(words_stolen)))
             return True
 
