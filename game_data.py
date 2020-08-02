@@ -95,6 +95,8 @@ class game_room():
                 else:
                     self.active_users[user].append(word)
                     self.active_users[username].remove(stealable_word)
+                ##Sort words
+                self.active_users[user] = sorted(self.active_users[user], key=len)
                 self.prev_source.append((user, word, list(still_needed), {username : stealable_word}))
                 return True
 
