@@ -87,7 +87,7 @@ class game_room():
         stealing_dict = sorted(stealing_dict, key=self.calculate_score)
         for user in stealing_dict:
             stealing_dict[user] = sorted(stealing_dict[user], key=neg_len)
-        for username, words in self.active_users.items():
+        for username, words in stealing_dict.items():
             for stealable_word in words:
                 still_needed = list_subtraction(list(word), list(stealable_word))
                 if still_needed is None or still_needed == []:
