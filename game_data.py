@@ -120,7 +120,7 @@ class game_room():
             self.active_users[user].append(word)
             for username, word_stolen in words_stolen:
                 self.active_users[username].remove(word_stolen)
-            self.prev_source.append((user, word, still_needed, dict(words_stolen)))
+            self.prev_source.append((user, word, still_needed, words_stolen))
             return True
 
         for username, words in stealing_dict.items():
@@ -139,7 +139,7 @@ class game_room():
                     self.active_users[user].append(word)
                     self.active_users[username].remove(stealable_word)
                 ##Sort words
-                self.prev_source.append((user, word, list(still_needed), {username : stealable_word}))
+                self.prev_source.append((user, word, list(still_needed), [(username, stealable_word)]))
                 return True
 
         #Steal from middle
@@ -149,7 +149,7 @@ class game_room():
         else:
             self.middle = new_middle
             self.active_users[user].append(word)
-            self.prev_source.append((user, word, list(word), dict()))
+            self.prev_source.append((user, word, list(word), []))
             return True
 
     def last_op(self):
@@ -196,7 +196,7 @@ class game_room():
             return
         self.middle = self.middle + last_op[2]
         self.active_users[last_op[0]].remove(last_op[1])
-        for username, word in last_op[3].items():
+        for username, word in last_op[3]:
             self.active_users[username].append(word)
         self.prev_source = self.prev_source[:-1]
 
