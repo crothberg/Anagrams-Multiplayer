@@ -114,7 +114,7 @@ class game_room():
         stealing_dict[user] = our_tmp
         multi_result = self.multi_word_recurse(user, word, stealing_dict, 0)
         if multi_result is not None:
-            print_log_line(str(multi_result))
+            app.print_log_line(str(multi_result))
             still_needed = multi_result[0]
             words_stolen = multi_result[1:]
             self.active_users[user].append(word)
