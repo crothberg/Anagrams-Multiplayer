@@ -159,7 +159,7 @@ def flip_tile(args):
     update_game_state(game, game_state)
     state_update = 'No more letters'
     if flipped_tile is not None:
-        article = 'an' if flipped_tile in 'ERIOASFHLX' else 'a'
+        article = 'an' if flipped_tile in 'ERIOASFHLXNM' else 'a'
         state_update = '%s flipped %s "%s"'  % (user, article, flipped_tile)
         print_log_line(state_update)
 
