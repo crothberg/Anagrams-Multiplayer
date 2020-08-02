@@ -182,7 +182,6 @@ def list_subtraction(list1, list2):
             return None
     return ret
 
-def user_sort(u1, u2):
-    print_log_line('u1 = "' + str(u1) + '"')
-    print_log_line('u2 = "' + str(u2) + '"')
+def user_val(u):
+    print_log_line('u1 = "' + str(u) + '"')
     return 1
