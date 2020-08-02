@@ -12,6 +12,7 @@ socketio = SocketIO(app)
 #db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
 #To run locally on Windows: set DATABASE_URL= user='postgres' host='localhost'
 
+@app.before_first_request
 def setup_db():
     print_log_line('running setup_db')
     cur = db.cursor()
@@ -288,6 +289,5 @@ def print_log_line(log_line):
     cur.execute('INSERT INTO LOGS (LOG_LINE, TIME) VALUES (%s, NOW())', (log_line,))
 
 print_log_line('__name__ = %s' % (__name__,))
-if __name__ == '__main__' or __name__ == 'app':
-    setup_db()
+if __name__ == '__main__':
     socketio.run(app)
