@@ -62,7 +62,8 @@ class game_room():
                 'middle' : self.middle,
                 'prev_source' : self.prev_source,
                 'challenge' : self.challenge,
-                'scores'    : scores}
+                'scores'    : scores,
+                'letters_remaining' :   len(self.letters_remaining())}
 
     def letters_already_flipped(self):
         ret = self.middle.copy()
