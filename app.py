@@ -239,7 +239,7 @@ def get_game_state(args):
     new_state = game_state.generate_game_state()
     socketio.emit(
         'game_state_update',
-        'game_state' : new_state}.
+        'game_state' : new_state},
         room = request.sid)
 
 def finish_challenge(game_state, room):
