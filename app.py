@@ -176,12 +176,15 @@ def steal_word(args):
     room = args.get('room')
 
     game_state = get_game_by_name(room)
-    game_state.steal_word(user, word)
+    steal_result = game_state.steal_word(user, word)
 
     update_game_state(room, game_state)
 
     new_state = game_state.generate_game_state()
     status_msg = '%s got the word %s' % (user, word)
+    if steal_result == False:
+        status_msg = '%s Tried to steal %s' % (user, word)
+
     socketio.emit(
         'game_state_update',
         {'status': status_msg, 'game_state' : new_state},
