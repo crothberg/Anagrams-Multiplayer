@@ -3,6 +3,9 @@
     <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
     <script src="{{ url_for('static', filename='js/js.cookie.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/jquery.fireworks.js') }}"></script>
+
     <script src="{{ url_for('static', filename='js/anagrams_utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/anagrams.js') }}"></script>
 
@@ -15,9 +18,10 @@
     <div id="header-bar">
         <h1 id="game-title">Anagrams</h1>
         <button id="leave-game">Leave Game</button>
+        <input id="current-url" type="hidden">
         <button id="share-game">Copy Game Link</button>
-        <p id="status">To flip a tile, press enter. To steal a word, type it.</p>
-        <h3>1. Can't steal a word from the middle if I already have it. 2. You can steal a word without adding a letter. 3. Refreshing makes you lose all your words. 4. What happens when we're out of letters?</h3>
+        <h3 id="status"></h3>
+        <p id="letters-remaining"></p>
     </div>
     <div id="main">
         <div id="board">

@@ -61,7 +61,11 @@ button {
     box-shadow: 0px 1px 5px rgba(0, 0, 0, .3);
 }
 #status {
-    margin: 5px;
+    margin: 0px;
+}
+#letters-remaining {
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 #leave-game {
     position: absolute;
@@ -190,6 +194,15 @@ button {
     background: var(--lightest);
     padding: 5px;
     border-radius: 3px;
+    line-height: 20px;
+}
+.player-score {
+    background: var(--medium);
+    color: white;
+    padding: 2px 8px;
+    margin: 8px 10px;
+    line-height: 15px;
+    font-size: 14px;
 }
 .wordlist {
     padding-bottom: 20px;

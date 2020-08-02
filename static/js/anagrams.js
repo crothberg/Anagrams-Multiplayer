@@ -13,8 +13,7 @@ window.onload = function() {
         socket.emit('join_game', {'username': username, 'game_name': game_name});
     });
 
-    /* TO DO */
-    // socket.emit('get_game_state', {'game_name': game_name})
+    socket.emit('get_game_state', {'game_name': game_name});
 
     socket.on('user_added', function(data) {
         $("#player-space").append(make_player(data['username']));
@@ -27,15 +26,23 @@ window.onload = function() {
         var status = data['status'];
         var users = data['game_state']['users'];
         var middle = data['game_state']['middle'];
+        var scores = data['game_state']['scores'];
+        var letters_remaining = data['game_state']['letters_remaining'];
         
         // Update status
         $('#status').text(status);
         
         // Update middle
-        $('#middle').html(make_middle(middle));
+        $('#middle').html(make_middle(middle, letters_remaining));
         
         // Update all users simultaneously
-        $("#player-space").html(make_all_players(users));
+        $("#player-space").html(make_all_players(users, scores, username));
+
+        console.log('LETTERS REMAINING:', letters_remaining);
+
+        // if (letters_remaining == 0) {
+        //     game_over()
+        // }
     });
 
     $("#flip-action").focus();
@@ -101,5 +108,19 @@ window.onload = function() {
         $("#challenge-modal").hide('drop', {direction: 'up'}, 'slow');
         console.log('Voted reject.')
     });
+
+    $("#share-game").click(function() {
+        var copyText = document.getElementById("current-url");
+        copyText.type = 'text';
+        copyText.value = window.location.href;
+        copyText.select();
+        document.execCommand("copy");
+        copyText.type = 'hidden';
+        alert('URL copied to clipboard!')
+    });
+
+    $("#leave-game").click(function() {
+        window.location.href = '/';
+    })
 
 }

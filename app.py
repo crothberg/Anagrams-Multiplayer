@@ -151,7 +151,7 @@ def flip_tile(args):
     cur = db.cursor()
     game_state = get_game_by_name(game)
     if game_state is None:
-        print_log_line('user %s attempted to acces missing room %s' % (user, game))
+        print_log_line('user %s attempted to access missing room %s' % (user, game))
         return
 
     flipped_tile = game_state.flip_tile()
@@ -159,8 +159,8 @@ def flip_tile(args):
     update_game_state(game, game_state)
     state_update = 'No more letters'
     if flipped_tile is not None:
-        article = 'an' if flipped_tile in 'ERIOASFHLX' else 'a'
-        state_update = 'User %s flipped %s "%s"'  % (user, article, flipped_tile)
+        article = 'an' if flipped_tile in 'ERIOASFHLXNM' else 'a'
+        state_update = '%s flipped %s "%s"'  % (user, article, flipped_tile)
         print_log_line(state_update)
 
     socketio.emit(
@@ -181,7 +181,7 @@ def steal_word(args):
     update_game_state(room, game_state)
 
     new_state = game_state.generate_game_state()
-    status_msg = '%s got the word %s' % (user, word)
+    status_msg = '%s stole the word "%s"' % (user, word)
     if steal_result == False:
         status_msg = '%s Tried to steal %s' % (user, word)
 
