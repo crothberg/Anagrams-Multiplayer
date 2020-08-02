@@ -82,7 +82,17 @@ def update_game_state(game_name, game_state):
 
 @socketio.on('disconnect')
 def user_disc():
-    pass
+    sid = request.sid
+    cur = db.cursor()
+    cur.execute('SELECT NAME, GAME FROM USERS WHERE SID = %s', (sid,))
+    user_data = cur.fetchone()
+    if username is None:
+        return
+    username, game = user_data
+    cur.execute('UPDATE USERS SET SID = NULL WHERE SID = %s', (sid,))
+    cur.execute('SELECT NAME FROM USERS WHERE GAME = %s and SID IS NOT NULL')
+    if cur.fetchone() is None:
+        cur.execute('DELETE FROM GAMES WHERE NAME = %s', (game,))
 
 def user_rem():
     sid = request.sid
