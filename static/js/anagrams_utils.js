@@ -43,10 +43,15 @@ function make_wordlist(words) {
     return wordlist;
 }
 
-function make_all_players(user_list, user_scores) {
+function make_all_players(user_list, user_scores, username) {
     $('.player-space').html('');
-    // Object.keys(user_list).sort(function(p1, p2) {return user_list[p2].length - user_list[p1].length})
-    for (const [idx, [player_name, player_words]] of Object.entries(Object.entries(user_list))) { 
+    var ordered_players = {};
+    Object.keys(user_list).sort(function(p1, p2) {
+        return (p1 == 'Carmi')? 1 : 0
+    }).forEach(function(key) {
+        ordered_players[key] = user_list[key];
+    });
+    for (const [idx, [player_name, player_words]] of Object.entries(Object.entries(ordered_players))) {
         var score = user_scores[player_name]
         console.log('HERE', idx, player_name, score, player_words);
         var player = make_player(player_name, score, player_words);

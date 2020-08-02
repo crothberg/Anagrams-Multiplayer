@@ -36,7 +36,7 @@ window.onload = function() {
         $('#middle').html(make_middle(middle, letters_remaining));
         
         // Update all users simultaneously
-        $("#player-space").html(make_all_players(users, scores));
+        $("#player-space").html(make_all_players(users, scores, username));
 
         console.log('LETTERS REMAINING:', letters_remaining);
 
