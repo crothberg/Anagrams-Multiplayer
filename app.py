@@ -157,9 +157,11 @@ def flip_tile(args):
     flipped_tile = game_state.flip_tile()
     new_state = game_state.generate_game_state()
     update_game_state(game, game_state)
-    article = 'an' if flipped_tile in 'ERIOASFHLX' else 'a'
-    state_update = 'User %s flipped %s "%s"'  % (user, article, flipped_tile)
-    print_log_line('%s has flipped %s "%s" in %s' % (user, article, flipped_tile, game))
+    state_update = 'No more letters'
+    if flipped_tile is not None:
+        article = 'an' if flipped_tile in 'ERIOASFHLX' else 'a'
+        state_update = 'User %s flipped %s "%s"'  % (user, article, flipped_tile)
+        print_log_line(state_update)
 
     socketio.emit(
         'game_state_update',
