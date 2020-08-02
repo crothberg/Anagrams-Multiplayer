@@ -108,6 +108,7 @@ class game_room():
             self.middle = new_middle
             self.active_users[user].append(word)
             self.prev_source.append((user, word, list(word), dict()))
+            self.active_users[user] = sorted(self.active_users[user], key=len)
             return True
 
     def last_op(self):
