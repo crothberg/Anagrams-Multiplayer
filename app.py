@@ -2,19 +2,15 @@ from flask import Flask, render_template, request, redirect
 from flask_socketio import SocketIO
 import flask_socketio
 import game_data
-import psycopg2
 import os
 import json
+from util import db, print_log_line
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
 #db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
 #To run locally on Windows: set DATABASE_URL= user='postgres' host='localhost'
-
-DATABASE_URL = os.environ['DATABASE_URL']
-db = psycopg2.connect(DATABASE_URL, sslmode='allow')
-db.autocommit = True
 
 def setup_db():
     print_log_line('running setup_db')
@@ -295,4 +291,3 @@ print_log_line('__name__ = %s' % (__name__,))
 if __name__ == '__main__':
     setup_db()
     socketio.run(app)
-    #app.run(debug=True)

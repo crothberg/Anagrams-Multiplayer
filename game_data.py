@@ -1,5 +1,5 @@
 import random
-import app
+from util import print_log_line
 import time
 import collections
 import copy
@@ -115,7 +115,7 @@ class game_room():
         stealing_dict[user] = our_tmp
         multi_result = self.multi_word_recurse(user, word, stealing_dict, 0)
         if multi_result is not None:
-            app.print_log_line(str(multi_result))
+            print_log_line(str(multi_result))
             still_needed = multi_result[0]
             words_stolen = multi_result[1:]
             self.active_users[user].append(word)
@@ -217,7 +217,7 @@ def list_subtraction(list1, list2):
         try:
             ret.remove(letter)
         except ValueError:
-            #app.print_log_line('subtraction failed: "%s" from "%s"' % (list1.join(','), list2.join(',')))
+            #print_log_line('subtraction failed: "%s" from "%s"' % (list1.join(','), list2.join(',')))
             return None
     return ret
 
