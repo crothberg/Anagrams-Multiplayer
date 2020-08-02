@@ -288,6 +288,6 @@ def print_log_line(log_line):
     cur.execute('INSERT INTO LOGS (LOG_LINE, TIME) VALUES (%s, NOW())', (log_line,))
 
 print_log_line('__name__ = %s' % (__name__,))
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'app':
     setup_db()
     socketio.run(app)
