@@ -116,7 +116,7 @@ class game_room():
         if multi_result is not None:
             still_needed = multi_result[0]
             words_stolen = multi_result[1:]
-            self.prev_source.append((user, word, still_needed, dict(words_stolen))
+            self.prev_source.append((user, word, still_needed, dict(words_stolen)))
             return True
 
         for username, words in stealing_dict.items():
