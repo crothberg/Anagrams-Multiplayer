@@ -2,6 +2,7 @@ import random
 import app
 import time
 import collections
+import copy
 
 letters = list( 'A' * 13 + 
                 'B' * 3 +
@@ -81,12 +82,43 @@ class game_room():
         self.middle.append(new_tile)
         return new_tile
 
+    def multi_word_recurse(self, user, word, stealing_dict, depth):
+        for username, words in stealing_dict.items():
+            for stealable_word in words:
+                still_needed = list_subtraction(list(word), list(stealable_word))
+                if still_needed is None or still_needed == []:
+                    continue
+                stealing_dict_inner = copy.deepcopy(stealing_dict)
+                stealing_dict_inner[username].remove(stealable_word)
+                result = multi_word_recurse(user, still_needed, stealing_dict_inner, depth + 1)
+                if result is not None:
+                    result.append((username, stealable_word))
+                    return result
+                if depth == 0:
+                    continue
+                new_middle = list_subtraction(self.middle, still_needed)
+                if new_middle is None:
+                    continue
+                self.middle = new_middle
+                return [still_needed, (username, stealable_word)]
+        return None
+
     def steal_word(self, user, word):
         #Steal from person
         stealing_dict_keys = sorted(self.active_users, key=self.calculate_score)
         stealing_dict = collections.OrderedDict()
-        for user in stealing_dict_keys:
-            stealing_dict[user] = sorted(self.active_users[user], key=neg_len)
+        for dict_user in stealing_dict_keys:
+            stealing_dict[dict_user] = sorted(self.active_users[dict_user], key=neg_len)
+        our_tmp = stealing_dict[user]
+        del stealing_dict[user]
+        stealing_dict[user] = our_tmp
+        multi_result = self.multi_word_recurse(user, word, stealing_dict, 0)
+        if multi_result is not None:
+            still_needed = multi_result[0]
+            words_stolen = multi_result[1:]
+            self.prev_source.append((user, word, still_needed, dict(words_stolen))
+            return True
+
         for username, words in stealing_dict.items():
             for stealable_word in words:
                 still_needed = list_subtraction(list(word), list(stealable_word))
