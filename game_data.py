@@ -54,11 +54,13 @@ class game_room():
         return len(self.active_users)
 
     def generate_game_state(self):
+        scores = {user : self.calculate_score(user) for user in self.active_users}
         return {'host' : self.host,
                 'users' : self.active_users,
                 'middle' : self.middle,
                 'prev_source' : self.prev_source,
-                'challenge' : self.challenge}
+                'challenge' : self.challenge,
+                'scores'    : scores}
 
     def letters_already_flipped(self):
         ret = self.middle.copy()
@@ -156,6 +158,12 @@ class game_room():
         for username, word in last_op[3].items():
             self.active_users[username].append(word)
         self.prev_source = self.prev_source[:-1]
+
+    def calculate_score(self, user):
+        score = 0
+        for word in self.active_users[user]:
+            score = score + len(word) - 2
+        return score
 
 
 def deserialize_game_room(game_state):
