@@ -109,7 +109,7 @@ button {
 }
 #middle {
     background: var(--light);
-    flex: 2;
+    flex: 1;
     padding: 10px;
     min-height: 20%;
     width: 50%;
