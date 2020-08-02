@@ -82,6 +82,9 @@ def update_game_state(game_name, game_state):
 
 @socketio.on('disconnect')
 def user_disc():
+    pass
+
+def user_rem():
     sid = request.sid
     cur = db.cursor()
     cur.execute('SELECT NAME, GAME FROM USERS WHERE SID = %s', (sid,))
