@@ -83,11 +83,10 @@ class game_room():
 
     def steal_word(self, user, word):
         #Steal from person
-        stealing_dict = collections.OrderedDict(self.active_users)
-        stealing_dict = sorted(stealing_dict, key=self.calculate_score)
-        for user in stealing_dict:
-            app.print_log_line(str(stealing_dict[user]))
-            stealing_dict[user] = sorted(stealing_dict[user], key=neg_len)
+        stealing_dict_keys = sorted(self.active_users, key=self.calculate_score)
+        stealing_dict = collections.OrderedDict()
+        for user in stealing_dict_keys:
+            stealing_dict[user] = sorted(self.active_users[user], key=neg_len)
         for username, words in stealing_dict.items():
             for stealable_word in words:
                 still_needed = list_subtraction(list(word), list(stealable_word))
