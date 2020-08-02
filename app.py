@@ -232,6 +232,16 @@ def challenge(args):
         {'status': status_msg},
         room = room)
 
+@socketio.on('get_game_state')
+def get_game_state(args):
+    room = args.get('game_name')
+    game_state = get_game_by_name(room)
+    new_state = game_state.generate_game_state()
+    socketio.emit(
+        'game_state_update',
+        'game_state' : new_state}.
+        room = request.sid)
+
 def finish_challenge(game_state, room):
     challenge_result = game_state.finish_challenge()
     new_state = game_state.generate_game_state()
