@@ -13,8 +13,7 @@ window.onload = function() {
         socket.emit('join_game', {'username': username, 'game_name': game_name});
     });
 
-    /* TO DO */
-    // socket.emit('get_game_state', {'game_name': game_name})
+    socket.emit('get_game_state', {'game_name': game_name});
 
     socket.on('user_added', function(data) {
         $("#player-space").append(make_player(data['username']));
@@ -27,6 +26,8 @@ window.onload = function() {
         var status = data['status'];
         var users = data['game_state']['users'];
         var middle = data['game_state']['middle'];
+        var scores = data['game_state']['scores'];
+        var letters_remaining = data['game_state']['letters_remaining'];
         
         // Update status
         $('#status').text(status);
@@ -35,7 +36,19 @@ window.onload = function() {
         $('#middle').html(make_middle(middle));
         
         // Update all users simultaneously
-        $("#player-space").html(make_all_players(users));
+        $("#player-space").html(make_all_players(users, scores));
+
+        console.log('LETTERS REMAINING:', letters_remaining);
+
+        // if (letters_remaining == 0) {
+        //     game_over()
+        // }
+    });
+
+    socket.on('game_over', function(data) {
+        var status = data['status'];
+        $('#status').text(status);
+        // ;
     });
 
     $("#flip-action").focus();
