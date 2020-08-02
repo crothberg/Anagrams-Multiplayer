@@ -291,7 +291,5 @@ def print_log_line(log_line):
 
 if __name__ == '__main__':
     setup_db()
-    destroy_db()
-    setup_db()
     socketio.run(app)
     #app.run(debug=True)
