@@ -24,9 +24,9 @@ def setup_db():
         cur.execute('CREATE TABLE GAMES (                   \
                         NAME TEXT               NOT NULL,   \
                         STATE TEXT )')
-        #cur.execute('CREATE TABLE LOGS  (                   \
-        #                LOG_LINE TEXT           NOT NULL,   \
-        #                TIME TIMESTAMP          NOT NULL)')
+        cur.execute('CREATE TABLE LOGS  (                   \
+                        LOG_LINE TEXT           NOT NULL,   \
+                        TIME TIMESTAMP          NOT NULL)')
     except Exception:
         print_log_line('exception')
         destroy_db()
@@ -36,7 +36,7 @@ def destroy_db():
     cur = db.cursor()
     cur.execute('DROP TABLE USERS')
     cur.execute('DROP TABLE GAMES')
-    #cur.execute('DROP TABLE LOGS')
+    cur.execute('DROP TABLE LOGS')
 
 @app.route('/')
 def hello():
@@ -86,8 +86,10 @@ def user_disc():
     cur.execute('SELECT NAME, GAME FROM USERS WHERE SID = %s', (sid,))
     user_data = cur.fetchone()
     if user_data is None:
+        print_log_line('Unknown user with SID = %s disconnected', (sid,))
         return
     username, game = user_data
+    print_log_line('%s (%s) disconnected', (username, sid))
     cur.execute('UPDATE USERS SET SID = NULL WHERE SID = %s', (sid,))
     cur.execute('SELECT NAME FROM USERS WHERE GAME = %s AND SID IS NOT NULL', (game,))
     if cur.fetchone() is None:
