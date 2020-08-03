@@ -14,6 +14,7 @@ socketio = SocketIO(app)
 
 @app.before_first_request
 def setup_db():
+    destroy_db()
     cur = db.cursor()
     try:
         cur.execute('CREATE TABLE USERS (                   \
@@ -26,15 +27,21 @@ def setup_db():
         cur.execute('CREATE TABLE LOGS  (                   \
                         LOG_LINE TEXT           NOT NULL,   \
                         TIME TIMESTAMP          NOT NULL)')
-    except Exception:
-        destroy_db()
-        setup_db()
 
 def destroy_db():
     cur = db.cursor()
-    cur.execute('DROP TABLE USERS')
-    cur.execute('DROP TABLE GAMES')
-    cur.execute('DROP TABLE LOGS')
+    try:
+        cur.execute('DROP TABLE USERS')
+    except Exception:
+        pass
+    try:
+        cur.execute('DROP TABLE GAMES')
+    except Exception:
+        pass
+    try:
+        cur.execute('DROP TABLE LOGS')
+    except Exception:
+        pass
 
 @app.route('/')
 def hello():
@@ -87,7 +94,7 @@ def user_disc():
         print_log_line('Unknown user with SID = %s disconnected', (sid,))
         return
     username, game = user_data
-    print_log_line('%s (%s) disconnected', (username, sid))
+    print_log_line('%s (%s) disconnected' % (username, sid))
     cur.execute('UPDATE USERS SET SID = NULL WHERE SID = %s', (sid,))
     cur.execute('SELECT NAME FROM USERS WHERE GAME = %s AND SID IS NOT NULL', (game,))
     if cur.fetchone() is None:
