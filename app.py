@@ -14,7 +14,6 @@ socketio = SocketIO(app)
 
 @app.before_first_request
 def setup_db():
-    print_log_line('running setup_db')
     cur = db.cursor()
     try:
         cur.execute('CREATE TABLE USERS (                   \
@@ -28,7 +27,6 @@ def setup_db():
                         LOG_LINE TEXT           NOT NULL,   \
                         TIME TIMESTAMP          NOT NULL)')
     except Exception:
-        print_log_line('exception')
         destroy_db()
         setup_db()
 
