@@ -16,17 +16,16 @@ socketio = SocketIO(app)
 def setup_db():
     destroy_db()
     cur = db.cursor()
-    try:
-        cur.execute('CREATE TABLE USERS (                   \
-                        NAME    TEXT            NOT NULL,   \
-                        SID     TEXT                    ,   \
-                        GAME    TEXT                    )')
-        cur.execute('CREATE TABLE GAMES (                   \
-                        NAME TEXT               NOT NULL,   \
-                        STATE TEXT )')
-        cur.execute('CREATE TABLE LOGS  (                   \
-                        LOG_LINE TEXT           NOT NULL,   \
-                        TIME TIMESTAMP          NOT NULL)')
+    cur.execute('CREATE TABLE USERS (                   \
+                    NAME    TEXT            NOT NULL,   \
+                    SID     TEXT                    ,   \
+                    GAME    TEXT                    )')
+    cur.execute('CREATE TABLE GAMES (                   \
+                    NAME TEXT               NOT NULL,   \
+                    STATE TEXT )')
+    cur.execute('CREATE TABLE LOGS  (                   \
+                    LOG_LINE TEXT           NOT NULL,   \
+                    TIME TIMESTAMP          NOT NULL)')
 
 def destroy_db():
     cur = db.cursor()
