@@ -5,22 +5,30 @@
     <script src="{{ url_for('static', filename='js/js.cookie.min.js') }}"></script>
 
     <script src="{{ url_for('static', filename='js/jquery.fireworks.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/contextMenu.min.js') }}"></script>
 
     <script src="{{ url_for('static', filename='js/anagrams_utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/anagrams.js') }}"></script>
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/contextMenu.min.css') }}">
 
     <title>Anagrams [{{ game_name }}]</title>
 </head>
 
 <body>
     <div id="header-bar">
+        <div id="left-buttons">
+            <button id="leave-game">Leave Game</button>
+            <button id="share-game">Copy Game Link</button>
+        </div>
         <h1 id="game-title">Anagrams</h1>
-        <button id="leave-game">Leave Game</button>
         <input id="current-url" type="hidden">
-        <button id="share-game">Copy Game Link</button>
         <h3 id="status"></h3>
+        <div id="right-buttons">
+            <button id="undo">Undo</button>
+            <button id="redo">Redo</button>
+        </div>
     </div>
     <div id="main">
         <div id="board">
@@ -41,14 +49,20 @@
             <div class="player-space" id="player-space-right">
             </div>
         </div>
-        <div id="chatbar">
-            <div id="chat-title">CHATS</div>
-            <div id="chats">
+        <div id="right-nav">
+            <h1 id="nav-toggle">◄</h1>
+            <h2 id="chat-title">CHATS</h2>
+            <div id="chatbar">
+                <div id="chats">
+                </div>
+                <div id="chat-input-div">
+                    <form id="chat-input-form">
+                        <input id="chat-input" type="text">
+                    </form>
+                </div>
             </div>
-            <div id="chat-input-div">
-                <form id="chat-input-form">
-                    <input id="chat-input" type="text">
-                </form>
+            <h2 id="history-title">HISTORY</h2>
+            <div id="history">
             </div>
         </div>
     </div>

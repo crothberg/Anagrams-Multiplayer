@@ -43,6 +43,10 @@ window.onload = function() {
         // if (letters_remaining == 0) {
         //     game_over()
         // }
+        
+        $('.word').click(function() {
+            socket.emit('challenge', {'room': game_name, 'user': username, 'target_user': this.getAttribute('player'), 'word': this.getAttribute('word')});
+        });
     });
 
     $("#flip-action").focus();
@@ -92,7 +96,13 @@ window.onload = function() {
 
     $("#challenge").click(function() {
         socket.emit('challenge', {'room': game_name, 'user': username});
-        console.log('Challenge request sent.')
+    });
+
+    $("#undo").click(function() {
+        socket.emit('undo', {'room': game_name});
+    });
+    $("#redo").click(function() {
+        socket.emit('redo', {'room': game_name});
     });
 
     $("#vote-yes").click(function() {
