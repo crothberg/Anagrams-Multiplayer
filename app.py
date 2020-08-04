@@ -66,7 +66,7 @@ def visit_game(game_name):
 @app.route('/logs')
 def get_logs():
     cur = cursor()
-    cur.execute('SELECT LOG_LINE, TIME FROM LOGS ORDER BY TIME DESC')
+    cur.execute('SELECT LOG_LINE, TIME FROM LOGS ORDER BY TIME DESC LIMIT 1000')
     logs = cur.fetchall()
     return '<br>'.join(['%s: %s' % (log_line[1], log_line[0]) for log_line in logs])
 
