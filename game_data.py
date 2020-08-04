@@ -79,6 +79,8 @@ class game_room():
         possibilities = self.letters_remaining()
         if len(possibilities) == 0:
             return None
+        if self.challenge is not None:
+            return None
         new_tile = random.choice(possibilities)
         self.middle.append(new_tile)
         return new_tile
@@ -105,6 +107,8 @@ class game_room():
         return None
 
     def steal_word(self, user, word):
+        if self.challenge is not None:
+            return None
         #Steal from person
         stealing_dict_keys = sorted(self.active_users, key=self.calculate_score)
         stealing_dict = collections.OrderedDict()
