@@ -84,7 +84,7 @@ window.onload = function() {
 
     $( "#flip-action-text" ).keydown(function(e) {
         var key = e.keyCode;
-        if ((key < 65 || key > 90) && !([8, 13, 17, 189, 187].includes(key))) {
+        if ((key < 65 || key > 90) && !([8, 13, 17, 189, 187, 16, 191].includes(key))) {
             e.preventDefault();
         }
     });
@@ -178,7 +178,26 @@ window.onload = function() {
         console.log(this);
     });
 
-    $("#nav-toggle").click(function() {
+
+    $("#chat-icon").click(function() {
+        // $("#nav-toggle").css('transform', 'rotate(' + 180 + 'deg)');
+        // $("#right-nav * h2").animate({"width": "250px"});
+        if (!(nav_open)) {
+            $("#chatbar").delay(200).slideToggle();
+            $("#history").delay(200).slideUp();
+        }
+        // nav_open = true;
+    })
+    $("#history-icon").click(function() {
+        // $("#nav-toggle").css('transform', 'rotate(' + 180 + 'deg)');
+        // $("#right-nav * h2").animate({"width": "250px"});
+        if (!(nav_open)) {
+            $("#history").delay(100).slideToggle();
+            $("#chatbar").delay(100).slideUp();
+        }
+        // nav_open = true;
+    })
+    $("#nav-toggle, #right-nav * .icon").click(function() {
         if (!nav_open) {
             $("#nav-toggle").animate(
                 { deg: 180 },
@@ -189,7 +208,13 @@ window.onload = function() {
                     }
                 }
             );
-            $("#right-nav > h2").animate({"width": "350px"});
+            $("#right-nav * h2").animate({'width': '250px'});
+            $("#right-nav * .icon").animate({
+                'border-top-left-radius': '3px',
+                'border-top-right-radius': '0px',
+                'border-bottom-left-radius': '0px',
+                'border-bottom-right-radius': '0px'
+            });
             nav_open = true;
         } else {
             $("#nav-toggle").animate(
@@ -201,7 +226,8 @@ window.onload = function() {
                     }
                 }
             );
-            $("#right-nav > h2").animate({"width": "0px"});
+            $("#right-nav * h2").animate({'width': '0px'});
+            $("#right-nav * .icon").animate({'border-radius': '20px'});
             $("#chatbar").hide();
             $("#history").hide();
             nav_open = false;
