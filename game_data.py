@@ -154,7 +154,7 @@ class game_room():
             return True
 
     def create_challenge(self, target_user, word):
-        if self.challenge is not None or len(self.prev_source) < 1
+        if self.challenge is not None or len(self.prev_source) < 1:
             return
         start_time = time.time()
         votes = {username : 0 for username in self.active_users}
