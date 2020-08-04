@@ -176,7 +176,7 @@ def flip_tile(args):
     if flipped_tile is not None:
         article = 'an' if flipped_tile in 'ERIOASFHLXNM' else 'a'
         state_update = '%s flipped %s "%s"'  % (user, article, flipped_tile)
-        print_log_line(state_update)
+        print_log_line(print_log_line('room %s: %s flipped %s "%s"' % (game, user, article, flipped_tile))
 
     socketio.emit(
         'game_state_update',
@@ -199,6 +199,8 @@ def steal_word(args):
     status_msg = '%s stole the word "%s"' % (user, word)
     if steal_result == False:
         status_msg = '%s tried to steal the word "%s"' % (user, word)
+    else:
+        print_log_line('room %s: %s stole the word "%s"' % (room, user, word))
 
     socketio.emit(
         'game_state_update',
@@ -244,6 +246,7 @@ def challenge(args):
     game_state = get_game_by_name(room)
     game_state.create_challenge(target_user, word)
     update_game_state(room, game_state)
+    print_log_line('room %s: %s is challenging %s\'s word - %s' % (room, user, target_user, word))
     status_msg = '%s is challenging %s\'s word: %s' % (user, target_user, word)
     socketio.emit(
         'challenge',
