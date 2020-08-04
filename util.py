@@ -9,6 +9,6 @@ def cursor():
     return db_conn.cursor()
 
 def print_log_line(log_line):
-    cur = db.cursor()
+    cur = cursor()
     cur.execute('INSERT INTO LOGS (LOG_LINE, TIME) VALUES (%s, NOW())', (log_line,))
 
