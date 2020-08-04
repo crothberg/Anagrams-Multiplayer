@@ -66,7 +66,7 @@ def visit_game(game_name):
 @app.route('/logs')
 def get_logs():
     cur = cursor()
-    cur.execute('SELECT LOG_LINE, TIME FROM LOGS ORDER BY TIME DESC LIMIT 30')
+    cur.execute('SELECT LOG_LINE, TIME FROM LOGS ORDER BY TIME DESC LIMIT 1000')
     logs = cur.fetchall()
     return '<br>'.join(['%s: %s' % (log_line[1], log_line[0]) for log_line in logs])
 
@@ -190,6 +190,7 @@ def steal_word(args):
     word = args.get('word')
     room = args.get('room')
 
+    word = game_data.char_strip(word)
     game_state = get_game_by_name(room)
     steal_result = game_state.steal_word(user, word)
 

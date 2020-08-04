@@ -176,6 +176,8 @@ class game_room():
         self.challenge[3][user] = vote_score
 
     def get_votes(self):
+        if self.challenge is None:
+            return ''
         return json.dumps(self.challenge[3])
 
     def all_votes_in(self):
@@ -237,3 +239,10 @@ def list_subtraction(list1, list2):
 
 def neg_len(word):
     return -len(word)
+
+def char_strip(word):
+    list_representation = []
+    for letter in word:
+        if letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ?':
+            list_representation.append(letter)
+    return ''.join(list_representation)
