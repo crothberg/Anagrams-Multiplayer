@@ -185,6 +185,7 @@ class game_room():
     def finish_challenge(self):
         all_votes = [vote for uname, vote in self.challenge[3].items()]
         challenge_tmp = self.challenge
+        #TMP
         print_log_line('finishing challenge: %s' % (str(challenge_tmp),))
         self.challenge = None
         if sum(all_votes) > 0:
@@ -194,6 +195,8 @@ class game_room():
             return False
 
     def rollback(self, user=None, word=None):
+        #TMP
+        print_log_line('len: %s', str(len(self.prev_source))
         if len(self.prev_source) < 1:
             return
 
@@ -206,6 +209,8 @@ class game_room():
                     challenging = candidate
             if challenging is None:
                 return
+        #TMP
+        print_log_line('challenging: %s', str(challenging))
         self.middle = self.middle + challenging[2]
         self.active_users[challenging[0]].remove(challenging[1])
         for username, word in challenging[3]:
