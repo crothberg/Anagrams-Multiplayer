@@ -153,18 +153,12 @@ class game_room():
             self.prev_source.append((user, word, list(word), []))
             return True
 
-    def last_op(self):
-        if len(self.prev_source) < 1:
-            return None
-        else:
-            return self.prev_source[-1]
-
-    def create_challenge(self):
-        if self.challenge is not None or self.last_op() is None:
+    def create_challenge(self, target_user, word):
+        if self.challenge is not None or len(self.prev_source) < 1
             return
         start_time = time.time()
         votes = {username : 0 for username in self.active_users}
-        self.challenge = (start_time, votes)
+        self.challenge = (start_time, target_user, word, votes)
 
     def set_vote(self, user, vote):
         if self.challenge is None:
@@ -174,32 +168,43 @@ class game_room():
             vote_score = -1
         else:
             vote_score = 1
-        self.challenge[1][user] = vote_score
+        self.challenge[3][user] = vote_score
 
     def all_votes_in(self):
         if self.challenge is None:
             return False
-        votes_needed = [vote for uname, vote in self.challenge[1].items() if vote == 0]
-        return len(votes_needed) < 1
+        votes_missing = len([vote for uname, vote in self.challenge[3].items() if vote == 0])
+        votes_yes = len([vote for uname, vote in self.challenge[3].items() if vote > 0])
+        votes_no = len([vote for uname, vote in self.challenge[3].items() if vote < 1])
+        return votes_missing == 0 or votes_yes > (votes_no + votes_missing) or votes_no > (votes_yes + votes_missing)
 
     def finish_challenge(self):
-        all_votes = [vote for uname, vote in self.challenge[1].items()]
+        all_votes = [vote for uname, vote in self.challenge[3].items()]
         self.challenge = None
         if sum(all_votes) > 0:
-            self.rollback()
+            self.rollback(self.challenge[1], self.challenge[2])
             return True
         else:
             return False
 
-    def rollback(self):
-        last_op = self.last_op()
-        if last_op is None:
+    def rollback(self, user=None, word=None):
+        if len(self.prev_source) < 1:
             return
-        self.middle = self.middle + last_op[2]
-        self.active_users[last_op[0]].remove(last_op[1])
-        for username, word in last_op[3]:
+
+        challenging = None
+        if user is None and word is None:
+            challenging = self.prev_source[-1]
+        else:
+            for candidate in self.prev_source:
+                if candidate[1] == user and candidate[2] == word:
+                    challenging = candidate
+            if challenging is None:
+                return
+        self.middle = self.middle + challenging[2]
+        self.active_users[challenging[0]].remove(challenging[1])
+        for username, word in challenging[3]:
             self.active_users[username].append(word)
-        self.prev_source = self.prev_source[:-1]
+        self.prev_source.remove(challenging)
 
     def calculate_score(self, user):
         score = 0

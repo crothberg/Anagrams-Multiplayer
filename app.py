@@ -239,12 +239,13 @@ def send_message(args):
 def challenge(args):
     room = args.get('room')
     user = args.get('user')
-
+    target_user = args.get('target_user')
+    word = args.get('word')
     game_state = get_game_by_name(room)
     challenging = game_state.last_op()
     if challenging is None:
         return
-    game_state.create_challenge()
+    game_state.create_challenge(target_user, word)
     update_game_state(room, game_state)
     status_msg = '%s is challenging %s\'s word: %s' % (user, challenging[0], challenging[1])
     socketio.emit(
