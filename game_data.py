@@ -188,7 +188,7 @@ class game_room():
         print_log_line('finishing challenge: %s' % (str(challenge_tmp),))
         self.challenge = None
         if sum(all_votes) > 0:
-            self.rollback(challenge_tmp[1], challenge_tmp[2])
+            self.rollback(challenge_tmp[2], challenge_tmp[1])
             return True
         else:
             return False
