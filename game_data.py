@@ -107,8 +107,7 @@ class game_room():
                 return [still_needed, (username, stealable_word)]
         return None
 
-    def steal_word(self, user, unstripped_word):
-        word = char_strip(unstripped_word)
+    def steal_word(self, user, word):
         if self.challenge is not None:
             return None
         #Steal from person
@@ -244,5 +243,4 @@ def char_strip(word):
     for letter in word:
         if letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ?':
             list_representation.append(letter)
-    print_log_line('stripped to: %s' % ''.join(list_representation))
     return ''.join(list_representation)

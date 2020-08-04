@@ -190,6 +190,7 @@ def steal_word(args):
     word = args.get('word')
     room = args.get('room')
 
+    word = game_data.char_strip(word)
     game_state = get_game_by_name(room)
     steal_result = game_state.steal_word(user, word)
 
