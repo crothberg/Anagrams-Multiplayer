@@ -107,7 +107,8 @@ class game_room():
                 return [still_needed, (username, stealable_word)]
         return None
 
-    def steal_word(self, user, word):
+    def steal_word(self, user, unstripped_word):
+        word = char_strip(unstripped_word)
         if self.challenge is not None:
             return None
         #Steal from person
@@ -237,3 +238,10 @@ def list_subtraction(list1, list2):
 
 def neg_len(word):
     return -len(word)
+
+def char_strip(word):
+    list_representation = []
+    for letter in word:
+        if letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ?'
+            list_representation.append(letter)
+    return str(list_representation)
