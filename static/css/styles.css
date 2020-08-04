@@ -12,7 +12,7 @@
     --medium: #486498;
     --dark: #456c87;
     --darker: #303966;
-    --darkest: #281754;
+    --darkest: #171b54;
 }
 
 @font-face {
@@ -51,6 +51,7 @@ button {
     background: var(--darker);
     color: white;
     cursor: pointer;
+    display: inline-block;
 }
 
 #header-bar {
@@ -66,12 +67,12 @@ button {
 #letters-remaining {
     flex: 1;
 }
-#leave-game {
+#left-buttons {
     position: absolute;
     left: 50px;
     top: 30px;
 }
-#share-game {
+#right-buttons {
     position: absolute;
     right: 50px;
     top: 30px;
@@ -129,18 +130,17 @@ button {
     margin: auto;
 }
 
+#right-nav {
+    background: var(--darkest);
+    color: white;
+}
+
 #chatbar {
     width: 300px;
     background: blue;
     display: flex;
     flex-direction: column;
     display: none;
-}
-#chat-title {
-    background: black;
-    color: white;
-    height: 50px;
-    line-height: 50px;
 }
 #chats {
     background: purple;
@@ -212,6 +212,15 @@ button {
 }
 .word {
     margin: 15px 15px 0px;
+    border-radius: 5px;
+    height: 0%;
+    cursor: not-allowed;
+}
+.word:hover {
+    background: var(--medium);
+}
+.word:hover * span {
+    opacity: .5;
 }
 
 .tile {
