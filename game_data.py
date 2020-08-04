@@ -176,6 +176,8 @@ class game_room():
         self.challenge[3][user] = vote_score
 
     def get_votes(self):
+        if self.challenge is None:
+            return ''
         return json.dumps(self.challenge[3])
 
     def all_votes_in(self):
