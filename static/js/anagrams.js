@@ -8,6 +8,8 @@ window.onload = function() {
 
     var socket = io();
     var game_name = window.location.pathname.split('/').pop();
+    var nav_open = false;
+    var voted = false;
 
     socket.on('connect', function() {
         socket.emit('join_game', {'username': username, 'game_name': game_name});
@@ -82,7 +84,7 @@ window.onload = function() {
 
     $( "#flip-action-text" ).keydown(function(e) {
         var key = e.keyCode;
-        if ((key < 65 || key > 90) && key != 8 && key != 13) {
+        if ((key < 65 || key > 90) && !([8, 13, 17, 189, 187].includes(key))) {
             e.preventDefault();
         }
     });
@@ -110,8 +112,6 @@ window.onload = function() {
         $("#modal-background").show('fade', 'slow');
         $("#challenge-modal").show('bounce', {times: 1}, 'slow');
     });
-
-    var voted = false;
 
     socket.on('vote_cast', function(data) {
         var no_votes = '';
@@ -172,6 +172,48 @@ window.onload = function() {
             voted = true;
             console.log('Voted reject.')
         }
+    });
+
+    $(".history-item").click(function() {
+        console.log(this);
+    });
+
+    $("#nav-toggle").click(function() {
+        if (!nav_open) {
+            $("#nav-toggle").animate(
+                { deg: 180 },
+                {
+                duration: 500,
+                    step: function(now) {
+                        $(this).css({ transform: 'rotate(' + now + 'deg)' });
+                    }
+                }
+            );
+            $("#right-nav > h2").animate({"width": "350px"});
+            nav_open = true;
+        } else {
+            $("#nav-toggle").animate(
+                { deg: -360 },
+                {
+                duration: 500,
+                    step: function(now) {
+                        $(this).css({ transform: 'rotate(' + now + 'deg)' });
+                    }
+                }
+            );
+            $("#right-nav > h2").animate({"width": "0px"});
+            $("#chatbar").hide();
+            $("#history").hide();
+            nav_open = false;
+        }
+    });
+    $("#chat-title").click(function(){
+        $("#chatbar").slideToggle();
+        $("#history").slideUp();
+    });
+    $("#history-title").click(function(){
+        $("#history").slideToggle();
+        $("#chatbar").slideUp();
     });
 
     $("#share-game").click(function() {
