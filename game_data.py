@@ -196,7 +196,7 @@ class game_room():
 
     def rollback(self, user=None, word=None):
         #TMP
-        print_log_line('len: %s', str(len(self.prev_source)))
+        print_log_line('len: %s' % str(len(self.prev_source)))
         if len(self.prev_source) < 1:
             return
 
@@ -210,7 +210,7 @@ class game_room():
             if challenging is None:
                 return
         #TMP
-        print_log_line('challenging: %s', str(challenging))
+        print_log_line('challenging: %s' % str(challenging))
         self.middle = self.middle + challenging[2]
         self.active_users[challenging[0]].remove(challenging[1])
         for username, word in challenging[3]:
