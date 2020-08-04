@@ -175,7 +175,7 @@ class game_room():
             return False
         votes_missing = len([vote for uname, vote in self.challenge[3].items() if vote == 0])
         votes_yes = len([vote for uname, vote in self.challenge[3].items() if vote > 0])
-        votes_no = len([vote for uname, vote in self.challenge[3].items() if vote < 1])
+        votes_no = len([vote for uname, vote in self.challenge[3].items() if vote < 0])
         return votes_missing == 0 or votes_yes > (votes_no + votes_missing) or votes_no > (votes_yes + votes_missing)
 
     def finish_challenge(self):
