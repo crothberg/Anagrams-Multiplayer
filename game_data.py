@@ -244,4 +244,5 @@ def char_strip(word):
     for letter in word:
         if letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ?':
             list_representation.append(letter)
+    print_log_line('stripped to: %s' % str(list_representation))
     return str(list_representation)
