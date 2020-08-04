@@ -242,6 +242,6 @@ def neg_len(word):
 def char_strip(word):
     list_representation = []
     for letter in word:
-        if letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ?'
+        if letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ?':
             list_representation.append(letter)
     return str(list_representation)
