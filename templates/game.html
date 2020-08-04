@@ -1,17 +1,24 @@
 <head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
     <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
     <script src="{{ url_for('static', filename='js/js.cookie.min.js') }}"></script>
 
     <script src="{{ url_for('static', filename='js/jquery.fireworks.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/contextMenu.min.js') }}"></script>
 
     <script src="{{ url_for('static', filename='js/anagrams_utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/anagrams.js') }}"></script>
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/contextMenu.min.css') }}">
+
+    <audio id="flip">
+        <source src="{{ url_for('static', filename='sounds/flip.mp3') }}" type="audio/mpeg">
+    </audio>
+    <audio id="steal">
+        <source src="{{ url_for('static', filename='sounds/steal.mp3') }}" type="audio/mpeg">
+    </audio>
 
     <title>Anagrams [{{ game_name }}]</title>
 </head>
@@ -20,14 +27,14 @@
     <div id="header-bar">
         <div id="left-buttons">
             <button id="leave-game">Leave Game</button>
-            <button id="share-game">Copy Game Link</button>
         </div>
         <h1 id="game-title">Anagrams</h1>
         <input id="current-url" type="hidden">
         <h3 id="status"></h3>
         <div id="right-buttons">
-            <button id="undo">Undo</button>
-            <button id="redo">Redo</button>
+            <button id="share-game">Copy Game Link</button>
+            <!-- <button id="undo">Undo</button>
+            <button id="redo">Redo</button> -->
         </div>
     </div>
     <div id="main">
@@ -41,17 +48,15 @@
                     </form>
                 </div>
                 <p id="letters-remaining"></p>
-                <div id="middle">Middle</div>
-                <div id="challenge-button-div">
-                    <button id="challenge">Challenge</button>
-                </div>
+                <div id="middle"></div>
+                <div id="dummy"></div>
             </div>
             <div class="player-space" id="player-space-right">
             </div>
         </div>
         <div id="right-nav">
             <h1 id="nav-toggle">◄</h1>
-            <h2 id="chat-title">CHATS</h2>
+            <h2 id="chat-title">CHAT</h2>
             <div id="chatbar">
                 <div id="chats">
                 </div>
@@ -70,8 +75,9 @@
     <div id="modal-background"></div>
     <div class="modal" id="challenge-modal">
         <h1 id="challenge-status"></h1>
-        <h3>How do you vote?</h3>
-        <p id='vote-yes'>It's a word</p>
-        <p id='vote-no'>It's not a word</p>
+        <h3 id="challenge-question">How do you vote?</h3>
+        <span class="vote" id="vote-yes">It's a word</span><span class="tally" id="yes-votes"></span>
+        <br>
+        <span class="vote" id="vote-no">It's not a word</span><span class="tally" id="no-votes"></span>
     </div>
 </body>

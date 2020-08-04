@@ -29,6 +29,17 @@ window.onload = function() {
         var scores = data['game_state']['scores'];
         var letters_remaining = data['game_state']['letters_remaining'];
         
+        if (!data['game_state']['challenge']) {
+            hide_modal();
+        }
+
+        $('audio#flip')[0].play()
+        // if (data['game_state']['event'] == 'flip') {
+        //     $('audio#flip')[0].play()
+        // } else if (data['game_state']['event'] == 'steal') {
+        //     $('audio#steal')[0].play()
+        // }
+        
         // Update status
         $('#status').text(status);
         
@@ -69,6 +80,13 @@ window.onload = function() {
         return false;
     });
 
+    $( "#flip-action-text" ).keydown(function(e) {
+        var key = e.keyCode;
+        if ((key < 65 || key > 90) && key != 8 && key != 13) {
+            e.preventDefault();
+        }
+    });
+
     $("#chat-input-form").submit(function(event) {
         message = $("#chat-input").val();
         socket.emit('send_message', {'user': username, 'message': message, 'room': game_name})
@@ -88,15 +106,29 @@ window.onload = function() {
     });
 
     socket.on('challenge', function(data) {
-        console.log('Challege initiated.')
         $("#challenge-status").text(data['status']);
         $("#modal-background").show('fade', 'slow');
         $("#challenge-modal").show('bounce', {times: 1}, 'slow');
     });
 
-    $("#challenge").click(function() {
-        socket.emit('challenge', {'room': game_name, 'user': username});
-    });
+    var voted = false;
+
+    socket.on('vote_cast', function(data) {
+        var no_votes = '';
+        var yes_votes = '';
+        votes = JSON.parse(data['votes']);
+        Object.values(votes).forEach(function(vote) {
+            console.log('VOTE', vote);
+            if (vote == 1) {
+                no_votes += '✋';
+            }
+            else if (vote == -1) {
+                yes_votes += '✋';
+            }
+        });
+        $("#no-votes").text(no_votes);
+        $("#yes-votes").text(yes_votes);
+    })
 
     $("#undo").click(function() {
         socket.emit('undo', {'room': game_name});
@@ -105,20 +137,41 @@ window.onload = function() {
         socket.emit('redo', {'room': game_name});
     });
 
-    $("#vote-yes").click(function() {
-        socket.emit('vote', {'room': game_name, 'user': username, 'vote': 'accept'});
+    function hide_modal() {
         $("#modal-background").hide('fade', 'slow');
         $("#challenge-modal").hide('drop', {direction: 'up'}, 'slow');
         $("#flip-action-text").focus();
-        console.log('Voted accept.')
+        $("#challenge-status").text('')
+        $("#challenge-question").text('How do you vote?')
+        $(".vote").css('background', 'white');
+        $(".vote").css('color', 'black');
+        $("#no-votes").text('');
+        $("#yes-votes").text('');
+        voted = false;
+    }
+
+    $("#vote-yes").click(function() {
+        if (!voted) {
+            socket.emit('vote', {'room': game_name, 'user': username, 'vote': 'accept'});
+            $("#challenge-status").text('You voted "It\'s a word."')
+            $("#challenge-question").text('')
+            $(".vote").css('background', 'lightgray');
+            $(".vote").css('color', 'darkgray');
+            voted = true;
+            console.log('Voted accept.')
+        }
     });
 
     $("#vote-no").click(function() {
-        socket.emit('vote', {'room': game_name, 'user': username, 'vote': 'reject'});
-        $("#modal-background").hide('fade', 'slow');
-        $("#challenge-modal").hide('drop', {direction: 'up'}, 'slow');
-        $("#flip-action-text").focus();
-        console.log('Voted reject.')
+        if (!voted) {
+            socket.emit('vote', {'room': game_name, 'user': username, 'vote': 'reject'});
+            $("#challenge-status").text('You voted "It\'s not a word."')
+            $("#challenge-question").text('')
+            $(".vote").css('background', 'lightgray');
+            $(".vote").css('color', 'darkgray');
+            voted = true;
+            console.log('Voted reject.')
+        }
     });
 
     $("#share-game").click(function() {
