@@ -189,7 +189,7 @@ class game_room():
         print_log_line('finishing challenge: %s' % (str(challenge_tmp),))
         self.challenge = None
         if sum(all_votes) > 0:
-            self.rollback(challenge_tmp[2], challenge_tmp[1])
+            self.rollback(challenge_tmp[1], challenge_tmp[2])
             return True
         else:
             return False
@@ -208,8 +208,8 @@ class game_room():
         else:
             for candidate in self.prev_source:
                 #TMP
-                print_log_line('candidate: (user, word) = (%s, %s)' % (candidate[1], candidate[2]))
-                if candidate[1] == user and candidate[2] == word:
+                print_log_line('candidate: (user, word) = (%s, %s)' % (candidate[0], candidate[1]))
+                if candidate[0] == user and candidate[1] == word:
                     challenging = candidate
             if challenging is None:
                 return
