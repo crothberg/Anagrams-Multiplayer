@@ -282,7 +282,7 @@ def vote(args):
     room = args.get('room')
     user = args.get('user')
     vote = args.get('vote')
-
+    print_log_line('room %s: %s votes to %s the challenge' % (room, user, vote))
     game_state = get_game_by_name(room)
     game_state.set_vote(user, vote)
 
