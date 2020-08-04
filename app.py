@@ -90,7 +90,7 @@ def user_disc():
     cur.execute('SELECT NAME, GAME FROM USERS WHERE SID = %s', (sid,))
     user_data = cur.fetchone()
     if user_data is None:
-        print_log_line('Unknown user with SID = %s disconnected', (sid,))
+        print_log_line('Unknown user with SID = %s disconnected' % (sid,))
         return
     username, game = user_data
     print_log_line('%s (%s) disconnected' % (username, sid))
