@@ -4,7 +4,7 @@ import flask_socketio
 import game_data
 import os
 import json
-from util import db, print_log_line
+from util import cursor, print_log_line
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -15,7 +15,7 @@ socketio = SocketIO(app)
 @app.before_first_request
 def setup_db():
     destroy_db()
-    cur = db.cursor()
+    cur = cursor()
     cur.execute('CREATE TABLE USERS (                   \
                     NAME    TEXT            NOT NULL,   \
                     SID     TEXT                    ,   \
@@ -28,7 +28,7 @@ def setup_db():
                     TIME TIMESTAMP          NOT NULL)')
 
 def destroy_db():
-    cur = db.cursor()
+    cur = cursor()
     try:
         cur.execute('DROP TABLE USERS')
     except Exception:
@@ -48,7 +48,7 @@ def hello():
 
 @app.route('/status')
 def get_status():
-    cur = db.cursor()
+    cur = cursor()
     cur.execute('SELECT * FROM GAMES')
     game_status = cur.fetchall()
     cur.execute('SELECT * FROM USERS')
@@ -65,13 +65,13 @@ def visit_game(game_name):
 
 @app.route('/logs')
 def get_logs():
-    cur = db.cursor()
+    cur = cursor()
     cur.execute('SELECT LOG_LINE, TIME FROM LOGS ORDER BY TIME DESC LIMIT 30')
     logs = cur.fetchall()
     return '<br>'.join(['%s: %s' % (log_line[1], log_line[0]) for log_line in logs])
 
 def get_game_by_name(game_name):
-    cur = db.cursor()
+    cur = cursor()
     cur.execute('SELECT STATE FROM GAMES WHERE NAME = %s', (game_name,))
     game_state_str = cur.fetchone()
     if game_state_str is None:
@@ -80,13 +80,13 @@ def get_game_by_name(game_name):
     return game_state
 
 def update_game_state(game_name, game_state):
-    cur = db.cursor()
+    cur = cursor()
     cur.execute('UPDATE GAMES SET STATE = %s WHERE NAME = %s', (json.dumps(game_state.generate_game_state()), game_name))
 
 @socketio.on('disconnect')
 def user_disc():
     sid = request.sid
-    cur = db.cursor()
+    cur = cursor()
     cur.execute('SELECT NAME, GAME FROM USERS WHERE SID = %s', (sid,))
     user_data = cur.fetchone()
     if user_data is None:
@@ -101,7 +101,7 @@ def user_disc():
 
 def user_rem():
     sid = request.sid
-    cur = db.cursor()
+    cur = cursor()
     cur.execute('SELECT NAME, GAME FROM USERS WHERE SID = %s', (sid,))
     user_data = cur.fetchone()
     if user_data is None:
@@ -133,7 +133,7 @@ def join_game(data):
     sid = request.sid
     username = data['username']
     game_name = data['game_name']
-    cur = db.cursor()
+    cur = cursor()
     game_state = get_game_by_name(game_name)
     cur.execute('DELETE FROM USERS WHERE NAME = %s', (username,))
     cur.execute('INSERT INTO USERS (NAME, SID, GAME) VALUES (%s, %s, %s)', (username, sid, game_name))
@@ -163,7 +163,7 @@ def join_game(data):
 def flip_tile(args):
     user = args.get('user')
     game = args.get('room')
-    cur = db.cursor()
+    cur = cursor()
     game_state = get_game_by_name(game)
     if game_state is None:
         print_log_line('user %s attempted to access missing room %s' % (user, game))
@@ -292,7 +292,7 @@ def vote(args):
         update_game_state(room, game_state)
 
 def print_log_line(log_line):
-    cur = db.cursor()
+    cur = cursor()
     cur.execute('INSERT INTO LOGS (LOG_LINE, TIME) VALUES (%s, NOW())', (log_line,))
 
 if __name__ == '__main__':
