@@ -244,14 +244,24 @@ def challenge(args):
     target_user = args.get('target_user')
     word = args.get('word')
     game_state = get_game_by_name(room)
-    game_state.create_challenge(target_user, word)
-    update_game_state(room, game_state)
-    print_log_line('room %s: %s is challenging %s\'s word - %s' % (room, user, target_user, word))
-    status_msg = '%s is challenging %s\'s word: %s' % (user, target_user, word)
-    socketio.emit(
-        'challenge',
-        {'status': status_msg},
-        room = room)
+    if target_user != user:
+        game_state.create_challenge(target_user, word)
+        update_game_state(room, game_state)
+        print_log_line('room %s: %s is challenging %s\'s word - %s' % (room, user, target_user, word))
+        status_msg = '%s is challenging %s\'s word: %s' % (user, target_user, word)
+        socketio.emit(
+            'challenge',
+            {'status': status_msg},
+            room = room)
+    else:
+        game_state.rollback(user, word)
+        new_state = game_state.generate_game_state()
+        update_game_state(room, game_state)
+        status_msg = '%s Has self challenged: %s' % (user, word)
+        socketio.emit(
+            'game_state_update',
+            {'status' : status_msg, 'game_state' : new_state},
+            room = room)
 
 @socketio.on('get_game_state')
 def get_game_state(args):
