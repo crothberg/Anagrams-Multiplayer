@@ -196,7 +196,7 @@ class game_room():
 
     def rollback(self, user=None, word=None):
         #TMP
-        print_log_line('len: %s', str(len(self.prev_source))
+        print_log_line('len: %s', str(len(self.prev_source)))
         if len(self.prev_source) < 1:
             return
 
