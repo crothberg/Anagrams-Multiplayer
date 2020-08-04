@@ -176,7 +176,7 @@ def flip_tile(args):
     if flipped_tile is not None:
         article = 'an' if flipped_tile in 'ERIOASFHLXNM' else 'a'
         state_update = '%s flipped %s "%s"'  % (user, article, flipped_tile)
-        print_log_line(print_log_line('room %s: %s flipped %s "%s"' % (game, user, article, flipped_tile))
+        print_log_line('room %s: %s flipped %s "%s"' % (game, user, article, flipped_tile))
 
     socketio.emit(
         'game_state_update',
