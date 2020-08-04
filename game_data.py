@@ -3,6 +3,7 @@ from util import print_log_line
 import time
 import collections
 import copy
+import json
 
 letters = list( 'A' * 13 + 
                 'B' * 3 +
@@ -173,6 +174,9 @@ class game_room():
         else:
             vote_score = 1
         self.challenge[3][user] = vote_score
+
+    def get_votes(self):
+        return json.dumps(self.challenge[3])
 
     def all_votes_in(self):
         if self.challenge is None:

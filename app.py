@@ -290,6 +290,11 @@ def vote(args):
         finish_challenge(game_state, room)
     else:
         update_game_state(room, game_state)
+        status_msg = '%s has voted: %s' % (user, vote)
+        socketio.emit(
+            'vote_cast',
+            {'status' : status_msg, 'votes' : game_state.get_votes()},
+            room = room)
 
 def print_log_line(log_line):
     cur = cursor()
