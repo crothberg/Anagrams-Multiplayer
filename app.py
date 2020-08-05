@@ -157,7 +157,7 @@ def join_game(data):
     new_state = game_state.generate_game_state()
     update_message = 'User %s has joined' % (username,)
     socketio.emit('game_state_update',
-                    {'game_state' : new_state, event : 'join', 'status' : update_message},
+                    {'game_state' : new_state, 'event' : 'join', 'status' : update_message},
                     room = game_name)
     send_challenge_updates(sid, game_state)
 
