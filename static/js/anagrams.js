@@ -8,6 +8,8 @@ window.onload = function() {
 
     var socket = io();
     var game_name = window.location.pathname.split('/').pop();
+    var nav_open = false;
+    var voted = false;
 
     socket.on('connect', function() {
         socket.emit('join_game', {'username': username, 'game_name': game_name});
@@ -28,6 +30,17 @@ window.onload = function() {
         var middle = data['game_state']['middle'];
         var scores = data['game_state']['scores'];
         var letters_remaining = data['game_state']['letters_remaining'];
+        
+        if (!data['game_state']['challenge']) {
+            hide_modal();
+        }
+
+        $('audio#flip')[0].play()
+        // if (data['game_state']['event'] == 'flip') {
+        //     $('audio#flip')[0].play()
+        // } else if (data['game_state']['event'] == 'steal') {
+        //     $('audio#steal')[0].play()
+        // }
         
         // Update status
         $('#status').text(status);
@@ -69,6 +82,13 @@ window.onload = function() {
         return false;
     });
 
+    $( "#flip-action-text" ).keydown(function(e) {
+        var key = e.keyCode;
+        if ((key < 65 || key > 90) && !([8, 13, 17, 189, 187, 16, 191].includes(key))) {
+            e.preventDefault();
+        }
+    });
+
     $("#chat-input-form").submit(function(event) {
         message = $("#chat-input").val();
         socket.emit('send_message', {'user': username, 'message': message, 'room': game_name})
@@ -88,15 +108,27 @@ window.onload = function() {
     });
 
     socket.on('challenge', function(data) {
-        console.log('Challege initiated.')
         $("#challenge-status").text(data['status']);
         $("#modal-background").show('fade', 'slow');
         $("#challenge-modal").show('bounce', {times: 1}, 'slow');
     });
 
-    $("#challenge").click(function() {
-        socket.emit('challenge', {'room': game_name, 'user': username});
-    });
+    socket.on('vote_cast', function(data) {
+        var no_votes = '';
+        var yes_votes = '';
+        votes = JSON.parse(data['votes']);
+        Object.values(votes).forEach(function(vote) {
+            console.log('VOTE', vote);
+            if (vote == 1) {
+                no_votes += '✋';
+            }
+            else if (vote == -1) {
+                yes_votes += '✋';
+            }
+        });
+        $("#no-votes").text(no_votes);
+        $("#yes-votes").text(yes_votes);
+    })
 
     $("#undo").click(function() {
         socket.emit('undo', {'room': game_name});
@@ -105,20 +137,109 @@ window.onload = function() {
         socket.emit('redo', {'room': game_name});
     });
 
-    $("#vote-yes").click(function() {
-        socket.emit('vote', {'room': game_name, 'user': username, 'vote': 'accept'});
+    function hide_modal() {
         $("#modal-background").hide('fade', 'slow');
         $("#challenge-modal").hide('drop', {direction: 'up'}, 'slow');
         $("#flip-action-text").focus();
-        console.log('Voted accept.')
+        $("#challenge-status").text('')
+        $("#challenge-question").text('How do you vote?')
+        $(".vote").css('background', 'white');
+        $(".vote").css('color', 'black');
+        $("#no-votes").text('');
+        $("#yes-votes").text('');
+        voted = false;
+    }
+
+    $("#vote-yes").click(function() {
+        if (!voted) {
+            socket.emit('vote', {'room': game_name, 'user': username, 'vote': 'accept'});
+            $("#challenge-status").text('You voted "It\'s a word."')
+            $("#challenge-question").text('')
+            $(".vote").css('background', 'lightgray');
+            $(".vote").css('color', 'darkgray');
+            voted = true;
+            console.log('Voted accept.')
+        }
     });
 
     $("#vote-no").click(function() {
-        socket.emit('vote', {'room': game_name, 'user': username, 'vote': 'reject'});
-        $("#modal-background").hide('fade', 'slow');
-        $("#challenge-modal").hide('drop', {direction: 'up'}, 'slow');
-        $("#flip-action-text").focus();
-        console.log('Voted reject.')
+        if (!voted) {
+            socket.emit('vote', {'room': game_name, 'user': username, 'vote': 'reject'});
+            $("#challenge-status").text('You voted "It\'s not a word."')
+            $("#challenge-question").text('')
+            $(".vote").css('background', 'lightgray');
+            $(".vote").css('color', 'darkgray');
+            voted = true;
+            console.log('Voted reject.')
+        }
+    });
+
+    $(".history-item").click(function() {
+        console.log(this);
+    });
+
+
+    $("#chat-icon").click(function() {
+        // $("#nav-toggle").css('transform', 'rotate(' + 180 + 'deg)');
+        // $("#right-nav * h2").animate({"width": "250px"});
+        if (!(nav_open)) {
+            $("#chatbar").delay(200).slideToggle();
+            $("#history").delay(200).slideUp();
+        }
+        // nav_open = true;
+    })
+    $("#history-icon").click(function() {
+        // $("#nav-toggle").css('transform', 'rotate(' + 180 + 'deg)');
+        // $("#right-nav * h2").animate({"width": "250px"});
+        if (!(nav_open)) {
+            $("#history").delay(100).slideToggle();
+            $("#chatbar").delay(100).slideUp();
+        }
+        // nav_open = true;
+    })
+    $("#nav-toggle, #right-nav * .icon").click(function() {
+        if (!nav_open) {
+            $("#nav-toggle").animate(
+                { deg: 180 },
+                {
+                duration: 500,
+                    step: function(now) {
+                        $(this).css({ transform: 'rotate(' + now + 'deg)' });
+                    }
+                }
+            );
+            $("#right-nav * h2").animate({'width': '250px'});
+            $("#right-nav * .icon").animate({
+                'border-top-left-radius': '3px',
+                'border-top-right-radius': '0px',
+                'border-bottom-left-radius': '0px',
+                'border-bottom-right-radius': '0px'
+            });
+            nav_open = true;
+        } else {
+            $("#nav-toggle").animate(
+                { deg: -360 },
+                {
+                duration: 500,
+                    step: function(now) {
+                        $(this).css({ transform: 'rotate(' + now + 'deg)' });
+                    }
+                }
+            );
+            $("#right-nav * h2").animate({'width': '0px'});
+            $("#right-nav * .icon").animate({'border-radius': '20px'});
+            $("#chatbar").hide();
+            $("#history").hide();
+            nav_open = false;
+        }
+    });
+    $("#chat-title").click(function(){
+        $("#chatbar").slideToggle();
+        $("#history").slideUp();
+    });
+    $("#history-title").click(function(){
+        $("#history").slideToggle();
+        $("#chatbar").slideUp();
     });
 
     $("#share-game").click(function() {
