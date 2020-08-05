@@ -223,6 +223,9 @@ class game_room():
             score = score + len(word) - 2
         return score
 
+    def get_challenge(self):
+        return self.challenge
+
 
 def deserialize_game_room(game_state):
     return game_room(game_state['host'], game_state['users'], game_state['middle'], game_state['prev_source'], game_state['challenge'])
