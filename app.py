@@ -124,7 +124,7 @@ def user_rem():
     new_state = game_state.generate_game_state()
     update_message = 'User %s has left' % (username,)
     socketio.emit('game_state_update',
-        {'game_state' : new_state, 'status' : update_message},
+        {'game_state' : new_state, 'event' : 'leave', 'status' : update_message},
         room = game
     )
 
@@ -157,7 +157,7 @@ def join_game(data):
     new_state = game_state.generate_game_state()
     update_message = 'User %s has joined' % (username,)
     socketio.emit('game_state_update',
-                    {'game_state' : new_state, 'status' : update_message},
+                    {'game_state' : new_state, event : 'join', 'status' : update_message},
                     room = game_name)
     send_challenge_updates(sid, game_state)
 
@@ -197,7 +197,7 @@ def flip_tile(args):
 
     socketio.emit(
         'game_state_update',
-        {'status' : state_update , 'game_state': new_state},
+        {'status' : state_update , 'event' : 'flip', 'game_state': new_state},
         room = game
     )
 
@@ -222,7 +222,7 @@ def steal_word(args):
 
     socketio.emit(
         'game_state_update',
-        {'status': status_msg, 'game_state' : new_state},
+        {'status': status_msg, 'event' : 'steal', 'game_state' : new_state},
         room = room
     )
 
@@ -239,7 +239,7 @@ def undo(args):
     status_msg = 'Undo granted'
     socketio.emit(
         'game_state_update',
-        {'status': status_msg, 'game_state' : new_state},
+        {'status': status_msg, 'event' : 'undo', 'game_state' : new_state},
         room = room
     )
 
@@ -278,7 +278,7 @@ def challenge(args):
         status_msg = '%s Has self challenged: %s' % (user, word)
         socketio.emit(
             'game_state_update',
-            {'status' : status_msg, 'game_state' : new_state},
+            {'status' : status_msg, 'event' : 'self_challenge' 'game_state' : new_state},
             room = room)
 
 @socketio.on('get_game_state')
@@ -288,7 +288,7 @@ def get_game_state(args):
     new_state = game_state.generate_game_state()
     socketio.emit(
         'game_state_update',
-        {'game_state' : new_state},
+        {'game_state' : new_state, 'event' : 'get_game_state'},
         room = request.sid)
 
 def finish_challenge(game_state, room):
@@ -302,7 +302,7 @@ def finish_challenge(game_state, room):
         status_msg = 'The challenge has failed'
     socketio.emit(
             'game_state_update',
-            {'status' : status_msg, 'game_state' : new_state},
+            {'status' : status_msg, 'end_challenge' 'game_state' : new_state},
             room = room)
 
 @socketio.on('vote')
