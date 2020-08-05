@@ -278,7 +278,7 @@ def challenge(args):
         status_msg = '%s Has self challenged: %s' % (user, word)
         socketio.emit(
             'game_state_update',
-            {'status' : status_msg, 'event' : 'self_challenge' 'game_state' : new_state},
+            {'status' : status_msg, 'event' : 'self_challenge', 'game_state' : new_state},
             room = room)
 
 @socketio.on('get_game_state')
