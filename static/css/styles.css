@@ -1,7 +1,7 @@
 :root {
     --lightest: #d9e7ff;
     --lighter: #b1c8f0;
-    --light: #9ab5e3;
+    --light: #849cc4;
     --medium: #486498;
     --dark: #3c5074;
     --darker: #303966;
@@ -121,9 +121,10 @@ button {
     /* position: fixed; */
     right: 0px;
     height: 100%;
+    box-shadow: -1px 0px 3px 0px rgba(53, 53, 58, 1);
 }
 #right-nav * h2 {
-    background: var(--medium);
+    background: var(--light);
     padding: 10px 0px;
     height: 20px;
     margin: 0px;
@@ -136,6 +137,7 @@ button {
 }
 #right-nav * .icon {
     display: inline-block;
+    position: relative;
     background: var(--medium);
     border-radius: 20px;
     height: 40px;
@@ -144,9 +146,24 @@ button {
     font-size: 20px;
     vertical-align: middle;
     cursor: pointer;
-    color: transparent;
-    text-shadow: 0 0 0 white;
 }
+.icon-overlay, .icon-underlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+.icon-underlay {
+    color: white;
+}
+.icon-overlay {
+    color: transparent;
+    text-shadow: 0 0 0 red;
+    mix-blend-mode: darken;
+    display: none;
+}
+
 .title-container {
     display: block;
     margin: 0px 15px;
@@ -154,6 +171,8 @@ button {
 #nav-toggle {
     cursor: pointer;
     display: inline-block;
+    margin-bottom: 30px;
+    color: var(--light);
 }
 
 #chatbar {
@@ -165,7 +184,7 @@ button {
     display: none;
 }
 #chats {
-    background: var(--light);
+    background: var(--lighter);
     padding: 10px 0px;
     flex: 1;
 }

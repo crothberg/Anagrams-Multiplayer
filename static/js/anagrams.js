@@ -9,6 +9,8 @@ window.onload = function() {
     var socket = io();
     var game_name = window.location.pathname.split('/').pop();
     var nav_open = false;
+    var chat_open = false;
+    var history_open = false;
     var voted = false;
 
     socket.on('connect', function() {
@@ -98,6 +100,9 @@ window.onload = function() {
         return false;
     });
     socket.on("message_sent", function(data) {
+        if (!(chat_open)) {
+            $("#chat-icon .icon-overlay").show();
+        }
         console.log(data);
         $("#chats").append(
             `<div class="message">
@@ -180,22 +185,21 @@ window.onload = function() {
 
 
     $("#chat-icon").click(function() {
-        // $("#nav-toggle").css('transform', 'rotate(' + 180 + 'deg)');
-        // $("#right-nav * h2").animate({"width": "250px"});
         if (!(nav_open)) {
             $("#chatbar").delay(200).slideToggle();
+            chat_open = true;
+            $("#chat-icon .icon-overlay").hide();
             $("#history").delay(200).slideUp();
+            history_open = false;
         }
-        // nav_open = true;
     })
     $("#history-icon").click(function() {
-        // $("#nav-toggle").css('transform', 'rotate(' + 180 + 'deg)');
-        // $("#right-nav * h2").animate({"width": "250px"});
         if (!(nav_open)) {
             $("#history").delay(100).slideToggle();
+            history_open = true;
             $("#chatbar").delay(100).slideUp();
+            chat_open = false;
         }
-        // nav_open = true;
     })
     $("#nav-toggle, #right-nav * .icon").click(function() {
         if (!nav_open) {
@@ -229,17 +233,24 @@ window.onload = function() {
             $("#right-nav * h2").animate({'width': '0px'});
             $("#right-nav * .icon").animate({'border-radius': '20px'});
             $("#chatbar").hide();
+            chat_open = false;
             $("#history").hide();
+            history_open = false;
             nav_open = false;
         }
     });
     $("#chat-title").click(function(){
         $("#chatbar").slideToggle();
+        chat_open = !(chat_open);
+        $("#chat-icon .icon-overlay").hide();
         $("#history").slideUp();
+        history_open = false;
     });
     $("#history-title").click(function(){
         $("#history").slideToggle();
+        history_open = !(history_open);
         $("#chatbar").slideUp();
+        chat_open = false;
     });
 
     $("#share-game").click(function() {
