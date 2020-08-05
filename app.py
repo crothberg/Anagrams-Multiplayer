@@ -170,7 +170,7 @@ def join_game(data):
 
         socketio.emit(
                     'vote_cast',
-                    {'status' : status_msg, 'votes' : game_state.get_votes())
+                    {'status' : status_msg, 'votes' : game_state.get_votes()},
                     room = room)
 
 
