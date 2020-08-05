@@ -161,17 +161,18 @@ def join_game(data):
 
     challenge = game_state.get_challenge()
     if challenge is not None:
+        print_log_line('rejoining during a challenge %s - %s' % (game_name, user))
         c_time, c_user, c_word, c_votes = challenge
         status_msg = '%s\'s word: %s is being challenged' % (c_user, c_word)
         socketio.emit(
                     'challenge',
                     {'status': status_msg},
-                    room = room)
+                    room = sid)
 
         socketio.emit(
                     'vote_cast',
                     {'status' : status_msg, 'votes' : game_state.get_votes()},
-                    room = room)
+                    room = sid)
 
 
 @socketio.on('flip')
