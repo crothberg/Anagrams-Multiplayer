@@ -159,7 +159,7 @@ def join_game(data):
                     {'game_state' : new_state, 'status' : update_message},
                     room = game_name)
 
-    challenge = self.get_challenge()
+    challenge = game_state.get_challenge()
     if challenge is not None:
         c_time, c_user, c_word, c_votes = challenge
         status_msg = '%s\'s word: %s is being challenged' % (c_user, c_word)
