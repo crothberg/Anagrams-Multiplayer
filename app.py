@@ -159,6 +159,21 @@ def join_game(data):
                     {'game_state' : new_state, 'status' : update_message},
                     room = game_name)
 
+    challenge = self.get_challenge()
+    if challenge is not None:
+        c_time, c_user, c_word, c_votes = challenge
+        status_msg = '%s\'s word: %s is being challenged' % (c_user, c_word)
+        socketio.emit(
+                    'challenge',
+                    {'status': status_msg},
+                    room = room)
+
+        socketio.emit(
+                    'vote_cast',
+                    {'status' : status_msg, 'votes' : game_state.get_votes())
+                    room = room)
+
+
 @socketio.on('flip')
 def flip_tile(args):
     user = args.get('user')
