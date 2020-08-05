@@ -145,6 +145,7 @@ def join_game(data):
     else:
         if game_state.has_user(username):
             print_log_line('%s updating sid to %s' % (username, sid))
+            send_challenge_updates(sid, game_state)
             return
         game_state.add_user(username)
 
@@ -158,10 +159,11 @@ def join_game(data):
     socketio.emit('game_state_update',
                     {'game_state' : new_state, 'status' : update_message},
                     room = game_name)
+    send_challenge_updates(sid, game_state)
 
+def send_challenge_updates(sid, game_state):
     challenge = game_state.get_challenge()
     if challenge is not None:
-        print_log_line('rejoining during a challenge %s - %s' % (game_name, user))
         c_time, c_user, c_word, c_votes = challenge
         status_msg = '%s\'s word: %s is being challenged' % (c_user, c_word)
         socketio.emit(
@@ -173,7 +175,6 @@ def join_game(data):
                     'vote_cast',
                     {'status' : status_msg, 'votes' : game_state.get_votes()},
                     room = sid)
-
 
 @socketio.on('flip')
 def flip_tile(args):
