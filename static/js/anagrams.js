@@ -12,6 +12,7 @@ window.onload = function() {
     var chat_open = false;
     var history_open = false;
     var voted = false;
+    var typing_start_time = 0;
 
     socket.on('connect', function() {
         socket.emit('join_game', {'username': username, 'game_name': game_name});
@@ -43,6 +44,7 @@ window.onload = function() {
         play_flip = false;
         if (event == 'flip') {
             delay = 3;
+            typing_start_time = 0;
         } else if (event == 'steal') {
             $('audio#steal')[0].play();
         } else if (event == 'self_challenge') {
@@ -105,8 +107,11 @@ window.onload = function() {
             console.log('Flip request sent.')
         } else {
             // If a word has been entered, try to steal it
+            var typing_end_time = new Date().getTime();
+            var typing_time = typing_end_time - typing_start_time;
+            console.log('TIME:', typing_time);
             console.log('A word has been stolen!');
-            socket.emit('steal', {'user': username, 'room': game_name, 'word': word});
+            socket.emit('steal', {'user': username, 'room': game_name, 'word': word, 'start_time': typing_start_time, 'typing_time': typing_time});
         }
         // Clear input
         $("#flip-action-text").val('');
@@ -114,8 +119,15 @@ window.onload = function() {
 
     $( "#flip-action-text" ).keydown(function(e) {
         var key = e.keyCode;
-        if ((key < 65 || key > 90) && !([8, 17, 189, 187, 16, 191].includes(key))) {
+        if ((key < 65 || key > 90) && !([8, 17, 18, 9, 116, 189, 187, 16, 191].includes(key))) {
             e.preventDefault();
+        } else {
+            if (!typing_start_time) {
+                typing_start_time = new Date().getTime();
+            }
+        }
+        if ([8, 17].includes(key)) {
+            typing_start_time = 0;
         }
         if ([32, 13].includes(key)) {
             submit_word();
