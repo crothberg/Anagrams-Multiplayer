@@ -32,23 +32,51 @@ window.onload = function() {
         var middle = data['game_state']['middle'];
         var scores = data['game_state']['scores'];
         var letters_remaining = data['game_state']['letters_remaining'];
+        var history = data['game_state']['prev_source'];
+        var event = data['event'];
         
         if (!data['game_state']['challenge']) {
             hide_modal();
         }
 
-        $('audio#flip')[0].play()
-        // if (data['game_state']['event'] == 'flip') {
-        //     $('audio#flip')[0].play()
-        // } else if (data['game_state']['event'] == 'steal') {
-        //     $('audio#steal')[0].play()
-        // }
-        
-        // Update status
-        $('#status').text(status);
+        var delay = 0;
+        play_flip = false;
+        if (event == 'flip') {
+            delay = 3;
+        } else if (event == 'steal') {
+            $('audio#steal')[0].play();
+        } else if (event == 'self_challenge') {
+            //pass
+        } else if (event == 'end_challenge') {
+            //pass
+        }
         
         // Update middle
-        $('#middle').html(make_middle(middle, letters_remaining));
+        if (delay == 0) {
+            $('#middle').html(make_middle(middle, letters_remaining));
+            // Update status
+            $('#status').text(status);
+        } else {
+            $('#status').text('Flipping in '+delay);
+            delay -= 1;
+        }
+        var flip_timer = setInterval(function() {
+            if (delay == 1) {
+                play_flip = true;
+            }
+            if (delay > 0) {
+                $('#status').text('Flipping in '+delay);
+                delay -= 1;
+            } else {   
+                if (play_flip) {
+                    $('audio#flip')[0].play();
+                }
+                $('#middle').html(make_middle(middle, letters_remaining));
+                // Update status
+                $('#status').text(status);
+                clearInterval(flip_timer);
+            }
+        }, 400);
         
         // Update all users simultaneously
         $("#player-space").html(make_all_players(users, scores, username));
@@ -59,14 +87,16 @@ window.onload = function() {
         //     game_over()
         // }
         
+        // Update history
+        make_history(history);
+
         $('.word').click(function() {
             socket.emit('challenge', {'room': game_name, 'user': username, 'target_user': this.getAttribute('player'), 'word': this.getAttribute('word')});
         });
     });
 
     $("#flip-action").focus();
-    $("#flip-action").submit(function(event) {
-
+    function submit_word() {
         // Get user input on press enter
         word = $("#flip-action-text").val().toUpperCase();
         if (!word) {
@@ -80,14 +110,15 @@ window.onload = function() {
         }
         // Clear input
         $("#flip-action-text").val('');
-        // Prevent form from redirecting
-        return false;
-    });
+    }
 
     $( "#flip-action-text" ).keydown(function(e) {
         var key = e.keyCode;
-        if ((key < 65 || key > 90) && !([8, 13, 17, 189, 187, 16, 191].includes(key))) {
+        if ((key < 65 || key > 90) && !([8, 17, 189, 187, 16, 191].includes(key))) {
             e.preventDefault();
+        }
+        if ([32, 13].includes(key)) {
+            submit_word();
         }
     });
 
@@ -103,7 +134,6 @@ window.onload = function() {
         if (!(chat_open)) {
             $("#chat-icon .icon-overlay").show();
         }
-        console.log(data);
         $("#chats").append(
             `<div class="message">
                 <p class="message-sender">`+data['user']+`</p>
@@ -123,7 +153,6 @@ window.onload = function() {
         var yes_votes = '';
         votes = JSON.parse(data['votes']);
         Object.values(votes).forEach(function(vote) {
-            console.log('VOTE', vote);
             if (vote == 1) {
                 no_votes += '✋';
             }
@@ -163,7 +192,6 @@ window.onload = function() {
             $(".vote").css('background', 'lightgray');
             $(".vote").css('color', 'darkgray');
             voted = true;
-            console.log('Voted accept.')
         }
     });
 
@@ -175,14 +203,8 @@ window.onload = function() {
             $(".vote").css('background', 'lightgray');
             $(".vote").css('color', 'darkgray');
             voted = true;
-            console.log('Voted reject.')
         }
     });
-
-    $(".history-item").click(function() {
-        console.log(this);
-    });
-
 
     $("#chat-icon").click(function() {
         if (!(nav_open)) {
@@ -195,9 +217,9 @@ window.onload = function() {
     })
     $("#history-icon").click(function() {
         if (!(nav_open)) {
-            $("#history").delay(100).slideToggle();
+            $("#history").delay(300).slideToggle();
             history_open = true;
-            $("#chatbar").delay(100).slideUp();
+            $("#chatbar").delay(200).slideUp();
             chat_open = false;
         }
     })

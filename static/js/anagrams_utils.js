@@ -1,5 +1,4 @@
 function make_player(player_name, score, words) {
-    console.log('PLAYER NAME ', player_name);
     var player =
     `<div class="player">
         <div class="player-name"><span>`+player_name+`</span><span class="player-score">`+score+`</span></div>
@@ -23,14 +22,10 @@ function make_middle(letters, letters_remaining) {
 }
 
 function make_wordlist(words, player) {
-    console.log('WORDS');
-    console.log(words);
-    console.log();
     var wordlist = '';
     words.forEach(function(word) {
         var word_display = '<div class="word" word="'+word+'" player="'+player+'">';
         word.split('').forEach(function(letter) {
-            console.log(letter)
             word_display += `<span class="tile">
                 <span class="tile-3d"></span>    
                 <span class="tile-letter">`+letter+`</span>
@@ -45,7 +40,6 @@ function make_wordlist(words, player) {
 
 function make_all_players(user_list, user_scores, username) {
     $('.player-space').html('');
-    console.log('UNORDERED:', user_list);
     var ordered_players = {};
     var sorted_usernames = Object.keys(user_list).sort(function(p1) {
         return (p1 == username)? -1 : 1;
@@ -53,7 +47,6 @@ function make_all_players(user_list, user_scores, username) {
     sorted_usernames.forEach(function(key) {
         ordered_players[key] = user_list[key];
     });
-    console.log('ORDERED:', ordered_players);
     for (const [idx, [player_name, player_words]] of Object.entries(Object.entries(ordered_players))) {
         var score = user_scores[player_name]
         var player = make_player(player_name, score, player_words);
@@ -63,6 +56,22 @@ function make_all_players(user_list, user_scores, username) {
             $('#player-space-right').append(player);
         }
     }
+}
+
+function make_history(history_states) {
+    $('#history').html('');
+    history_states.reverse().slice(0, 10).forEach(function(item) {
+        if (item[3].length) {
+            source = item[3][0][0] + '\'s word ' + item[3][0][1];
+        } else {
+            source = 'the middle';
+        }
+        $('#history').append(`<p class="history-item">` + item[0] + ' stole ' + item[1] + ' from ' + source + `</p>`);
+    });
+
+    $(".history-item").click(function() {
+        console.log(this);
+    });
 }
 
 function game_over() {
