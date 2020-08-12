@@ -108,7 +108,7 @@ class game_room():
         return None
 
     def steal_word(self, user, word, typing_time):
-        steal_time = typing_time
+        steal_time = time.time() - typing_time
         if self.challenge is not None:
             return None
         #Steal from person
