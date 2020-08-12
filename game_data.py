@@ -212,7 +212,11 @@ class game_room():
             if challenging is None:
                 return
         self.middle = self.middle + challenging[2]
-        self.active_users[challenging[0]].remove(challenging[1])
+        try:
+            self.active_users[challenging[0]].remove(challenging[1])
+
+        except ValueError:
+            return
         for username, word in challenging[3]:
             self.active_users[username].append(word)
         self.prev_source.remove(challenging)
