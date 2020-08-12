@@ -202,7 +202,7 @@ def flip_tile(args):
         room = game
     )
 
-MAX_TYPING_TIME = 5
+MAX_TYPING_TIME = 2
 @socketio.on('steal')
 def steal_word(args):
     user = args.get('user')
@@ -210,6 +210,7 @@ def steal_word(args):
     room = args.get('room')
     typing_time = args.get('typing_time')
     print_log_line('word: %s typing_time: %s' % (word, typing_time))
+    typing_time = typing_time / 1000
     if typing_time > MAX_TYPING_TIME:
         typing_time = MAX_TYPING_TIME
     word = game_data.char_strip(word)
