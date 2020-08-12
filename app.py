@@ -217,8 +217,8 @@ def steal_word(args):
 
     while steal_result == False:
         prev_time = game_state.prev_time()
+        print_log_line('rollback %s - %s - %s' % (prev_time, time.time(), typing_time))
         if prev_time > time.time() - typing_time:
-            print_log_line('rollback %s - %s - %s' % (prev_time, time.time(), typing_time))
             game_state.rollback()
             steal_result = game_state.steal_word(user, word, typing_time)
         else:
