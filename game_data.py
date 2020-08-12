@@ -107,7 +107,8 @@ class game_room():
                 return [still_needed, (username, stealable_word)]
         return None
 
-    def steal_word(self, user, word):
+    def steal_word(self, user, word, typing_time):
+        steal_time = time.time() - typing_time
         if self.challenge is not None:
             return None
         #Steal from person
@@ -126,7 +127,7 @@ class game_room():
             self.active_users[user].append(word)
             for username, word_stolen in words_stolen:
                 self.active_users[username].remove(word_stolen)
-            self.prev_source.append((user, word, still_needed, words_stolen))
+            self.prev_source.append((user, word, still_needed, words_stolen, steal_time))
             return True
 
         for username, words in stealing_dict.items():
@@ -145,7 +146,7 @@ class game_room():
                     self.active_users[user].append(word)
                     self.active_users[username].remove(stealable_word)
                 ##Sort words
-                self.prev_source.append((user, word, list(still_needed), [(username, stealable_word)]))
+                self.prev_source.append((user, word, list(still_needed), [(username, stealable_word)], steal_time))
                 return True
 
         #Steal from middle
@@ -155,7 +156,7 @@ class game_room():
         else:
             self.middle = new_middle
             self.active_users[user].append(word)
-            self.prev_source.append((user, word, list(word), []))
+            self.prev_source.append((user, word, list(word), [], steal_time))
             return True
 
     def create_challenge(self, target_user, word):
@@ -229,6 +230,12 @@ class game_room():
 
     def get_challenge(self):
         return self.challenge
+
+    def prev_time(self):
+        if len(self.prev_source) == 0:
+            return 0
+        else:
+            return self.prev_source[-1][4]
 
 
 def deserialize_game_room(game_state):

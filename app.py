@@ -201,24 +201,34 @@ def flip_tile(args):
         room = game
     )
 
+MAX_TYPING_TIME = 2
 @socketio.on('steal')
 def steal_word(args):
     user = args.get('user')
     word = args.get('word')
     room = args.get('room')
-
+    typing_time = args.get('typing_time')
+    if typing_time > MAX_TYPING_TIME:
+        typing_time = MAX_TYPING_TIME
     word = game_data.char_strip(word)
     game_state = get_game_by_name(room)
-    steal_result = game_state.steal_word(user, word)
 
-    update_game_state(room, game_state)
+    while steal_result == False:
+        prev_time = game_state.prev_time()
+        if prev_time < time.time() - typing_time:
+            game_state.undo()
+            steal_result = game_state.steal_word(user, word, typing_time)
+        else:
+            break
 
     new_state = game_state.generate_game_state()
     status_msg = '%s stole the word "%s"' % (user, word)
     if steal_result == False:
         status_msg = '%s tried to steal the word "%s"' % (user, word)
+        game_state = get_game_by_name(room)
     else:
         print_log_line('room %s: %s stole the word "%s"' % (room, user, word))
+        update_game_state(room, game_state)
 
     socketio.emit(
         'game_state_update',
