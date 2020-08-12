@@ -202,7 +202,7 @@ def flip_tile(args):
         room = game
     )
 
-MAX_TYPING_TIME = 2
+MAX_TYPING_TIME = 1000
 @socketio.on('steal')
 def steal_word(args):
     user = args.get('user')
