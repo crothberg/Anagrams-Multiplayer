@@ -227,7 +227,7 @@ def steal_word(args):
     truncate = game_state.hist_len()
     tail = old_game_state.hist_tail(truncate)
     for steal_record in tail:
-        game_state.steal_word(steal_record[0], steal_record[1], stail_record[4]
+        game_state.steal_word(steal_record[0], steal_record[1], stail_record[4])
 
     new_state = game_state.generate_game_state()
     status_msg = '%s stole the word "%s"' % (user, word)
