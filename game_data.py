@@ -108,7 +108,7 @@ class game_room():
         return None
 
     def steal_word(self, user, word, typing_time):
-        steal_time = time.time() - typing_time
+        steal_time = typing_time
         if self.challenge is not None:
             return None
         #Steal from person
@@ -236,6 +236,15 @@ class game_room():
             return 0
         else:
             return self.prev_source[-1][4]
+
+    def hist_len(self):
+        return len(self.prev_source)
+
+    def hist_tail(self, truncate):
+        if len(self.prev_source) <= truncate:
+            return []
+        else:
+            return self.prev_source[truncate:-1]
 
 
 def deserialize_game_room(game_state):

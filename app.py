@@ -217,17 +217,23 @@ def steal_word(args):
 
     while steal_result == False:
         prev_time = game_state.prev_time()
-        if prev_time < time.time() - typing_time:
+        if prev_time < - typing_time:
             game_state.rollback()
             steal_result = game_state.steal_word(user, word, typing_time)
         else:
             break
 
+    old_game_state = get_game_by_name(room)
+    truncate = game_state.hist_len()
+    tail = old_game_state.hist_tail(truncate)
+    for steal_record in tail:
+        game_state.steal_word(steal_record[0], steal_record[1], stail_record[4]
+
     new_state = game_state.generate_game_state()
     status_msg = '%s stole the word "%s"' % (user, word)
     if steal_result == False:
         status_msg = '%s tried to steal the word "%s"' % (user, word)
-        game_state = get_game_by_name(room)
+        game_state = old_game_state
     else:
         print_log_line('room %s: %s stole the word "%s"' % (room, user, word))
         update_game_state(room, game_state)
