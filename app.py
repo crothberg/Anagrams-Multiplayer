@@ -212,6 +212,7 @@ def steal_word(args):
         typing_time = MAX_TYPING_TIME
     word = game_data.char_strip(word)
     game_state = get_game_by_name(room)
+    steal_result = game_state.steal_word(user, word, typing_time)
 
     while steal_result == False:
         prev_time = game_state.prev_time()
