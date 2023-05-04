@@ -210,7 +210,6 @@ def steal_word(args):
     word = args.get('word')
     room = args.get('room')
     typing_time = args.get('typing_time')
-    print_log_line('word: %s typing_time: %s' % (word, typing_time))
     typing_time = typing_time / 1000
     if typing_time > MAX_TYPING_TIME:
         typing_time = MAX_TYPING_TIME
@@ -220,7 +219,6 @@ def steal_word(args):
 
     while steal_result == False:
         prev_time = game_state.prev_time()
-        print_log_line('rollback %s - %s - %s' % (prev_time, time.time(), typing_time))
         if prev_time > time.time() - typing_time:
             game_state.rollback()
             steal_result = game_state.steal_word(user, word, typing_time)
