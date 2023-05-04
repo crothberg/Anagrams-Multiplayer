@@ -1,7 +1,7 @@
 <head>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
-    <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-3.6.3.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
     <script src="{{ url_for('static', filename='js/js.cookie.min.js') }}"></script>
@@ -18,6 +18,9 @@
     </audio>
     <audio id="steal">
         <source src="{{ url_for('static', filename='sounds/steal.mp3') }}" type="audio/mpeg">
+    </audio>
+    <audio id="join">
+        <source src="{{ url_for('static', filename='sounds/join.mp3') }}" type="audio/mpeg">
     </audio>
 
     <title>Anagrams [{{ game_name }}]</title>

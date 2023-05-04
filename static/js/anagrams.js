@@ -18,10 +18,13 @@ window.onload = function() {
         socket.emit('join_game', {'username': username, 'game_name': game_name});
     });
 
-    socket.emit('get_game_state', {'game_name': game_name});
+    socket.on('game_joined', function() {
+        socket.emit('get_game_state', {'game_name': game_name});
+    });
 
     socket.on('user_added', function(data) {
         $("#player-space").append(make_player(data['username']));
+        $('audio#join')[0].play(); 
     });
 
     socket.on('game_state_update', function(data) {
@@ -286,6 +289,24 @@ window.onload = function() {
         $("#chatbar").slideUp();
         chat_open = false;
     });
+
+    function make_history(history_states) {
+        $('#history').html('');
+        history_states.reverse().slice(0, 10).forEach(function(item) {
+            // if (item[3].length) {
+            //     source = item[3][0][0] + '\'s word ' + item[3][0][1];
+            // } else {
+            //     source = 'the middle';
+            // }
+            var text = item[0] + ' stole ' + item[1]// + ' from ' + source;
+            $('#history').append(`<p class="history-item" player="` + item[0] + `" + word="` + item[1] + `">` + text + `</p>`);
+        });
+    
+        $(".history-item").click(function() {
+            console.log(this);
+            socket.emit('challenge', {'room': game_name, 'user': username, 'target_user': this.getAttribute('player'), 'word': this.getAttribute('word')});
+        });
+    }
 
     $("#share-game").click(function() {
         var copyText = document.getElementById("current-url");

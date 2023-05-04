@@ -149,6 +149,7 @@ def join_game(data):
             send_challenge_updates(sid, game_state)
             return
         game_state.add_user(username)
+        socketio.emit('joined_game')
 
     print_log_line('user %s (%s) joining game %s' % (username, sid, game_name))
     update_game_state(game_name, game_state)

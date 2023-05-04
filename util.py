@@ -1,7 +1,7 @@
 import os
 import psycopg2
 
-DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = "user='postgres' host='localhost'" #os.environ['DATABASE_URL']
 
 def cursor():
     db_conn = psycopg2.connect(DATABASE_URL, sslmode='allow')

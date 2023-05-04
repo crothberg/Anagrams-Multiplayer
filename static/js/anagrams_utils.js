@@ -58,23 +58,6 @@ function make_all_players(user_list, user_scores, username) {
     }
 }
 
-function make_history(history_states) {
-    $('#history').html('');
-    history_states.reverse().slice(0, 10).forEach(function(item) {
-        // if (item[3].length) {
-        //     source = item[3][0][0] + '\'s word ' + item[3][0][1];
-        // } else {
-        //     source = 'the middle';
-        // }
-        var text = item[0] + ' stole ' + item[1]// + ' from ' + source;
-        $('#history').append(`<p class="history-item">` + text + `</p>`);
-    });
-
-    $(".history-item").click(function() {
-        console.log(this);
-    });
-}
-
 function game_over() {
     $("body").css('background', 'black');
     $("body *").css('background', 'black');

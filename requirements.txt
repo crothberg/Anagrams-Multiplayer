@@ -1,5 +1,8 @@
+eventlet
 gunicorn
 flask
-flask-socketio
-eventlet
+Flask-SocketIO
+python-engineio
+python-socketio
+psycopg2
 psycopg2-binary
