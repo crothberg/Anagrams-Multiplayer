@@ -13,7 +13,6 @@ socketio = SocketIO(app)
 #db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
 #To run locally on Windows: set DATABASE_URL= user='postgres' host='localhost'
 
-@app.before_first_request
 def setup_db():
     destroy_db()
     cur = cursor()
@@ -42,6 +41,9 @@ def destroy_db():
         cur.execute('DROP TABLE LOGS')
     except Exception:
         pass
+
+with app.app_context():
+    setup_db()
 
 @app.route('/')
 def hello():
