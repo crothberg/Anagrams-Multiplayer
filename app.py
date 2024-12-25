@@ -8,7 +8,7 @@ import time
 from util import cursor, print_log_line
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins='https://anagrams.chaney.tech')
 
 #db_storage = ZODB.FileStorage.FileStorage('tmp_anagrams_online.db')
 #To run locally on Windows: set DATABASE_URL= user='postgres' host='localhost'
